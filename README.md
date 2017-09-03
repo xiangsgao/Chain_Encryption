@@ -3,7 +3,7 @@ This will be a C++ software for encrypting all the text in a text file using a u
 
 This will be my first C++ app and it will be a learning app. This means until the app reaches version 1.0 status, it will be full of irrelevent code such as hello world. 
 
-This appliaction is made with qt creator IDE and utlizes the qt framework. It will be cross compatible in all majore desktop operating system such as windows, linux, and mac OS. 
+This appliaction is made using qt creator IDE and utlizes the qt framework. It will be cross compatible in all major desktop operating system such as windows, linux, and mac OS. 
 
 # Text-Crypt
 The purpose of this app is to encrypt your text file into total gibberish, which is useful if you want something like a master file to store all your online passwords or send secret messages over email. 
