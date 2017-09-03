@@ -8,4 +8,4 @@ This appliaction is made using qt creator IDE and utlizes the qt framework. It w
 # Text-Crypt
 The purpose of this app is to encrypt your text file into total gibberish, which is useful if you want something like a master file to store all your online passwords or send secret messages over email. 
 
-It will be able to read text file and convert plain text into encypted jibberish using n user choosen password and will only succeed in decoding if the password is correct
+It will be able to read text file and convert plain text into encypted jibberish using an user choosen password and will only succeed in decoding if the password is correct
