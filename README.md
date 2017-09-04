@@ -1,4 +1,4 @@
-# project overview
+# Project Overview
 This will be a C++ software for encrypting all the text in a text file using an unique key
 
 This will be my first C++ app and it will be a learning app. This means until the app reaches version 1.0 status, it will be full of irrelevent code such as hello world. 
