@@ -5,7 +5,7 @@ public class model {
 	mainWindow window;
 	
 	public model(mainWindow window) {
-	
+		this.window = window;
 	}
 	
 
