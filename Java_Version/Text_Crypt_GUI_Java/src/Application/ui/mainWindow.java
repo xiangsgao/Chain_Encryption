@@ -1,6 +1,6 @@
-package ui;
+package Application.ui;
 import javafx.stage.Stage;
-import logic.model;
+import Application.logic.model;
 import javafx.event.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

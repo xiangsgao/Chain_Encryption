@@ -1,5 +1,5 @@
-package logic;
-import ui.mainWindow;
+package Application.logic;
+import Application.ui.mainWindow;
 
 public class model {
 	
