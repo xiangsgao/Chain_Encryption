@@ -2,11 +2,19 @@ package logic;
 import ui.mainWindow;
 
 public class model {
-	mainWindow window;
+	
+	private mainWindow window;
 	
 	public model(mainWindow window) {
 		this.window = window;
 	}
+	
+	
+	public void browsedClicked() {
+		System.out.println("Success");
+	}
+	
+	
 	
 
 }

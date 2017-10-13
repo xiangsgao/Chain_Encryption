@@ -7,9 +7,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 public class mainWindow {
 
-	model model;
-	Stage stage;
-	Parent root;
+	private model model;
+	private Stage stage;
+	private Parent root;
 	
 	public mainWindow(Stage stage) throws Exception{
 		/* This is how you do it without forms
