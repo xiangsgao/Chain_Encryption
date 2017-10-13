@@ -4,9 +4,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="500" prefWidth="500" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="500" prefWidth="500" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Application.logic.Form_Controller.mainSceneController">
    <children>
-      <Button layoutX="190.0" layoutY="220.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="121.0" text="Button" />
-      <Label layoutX="102.0" layoutY="168.0" prefHeight="29.0" prefWidth="297.0" text="Label" />
+      <Button fx:id="browseButton" layoutX="190.0" layoutY="220.0" mnemonicParsing="false" onAction="#browseButtonClicked" prefHeight="60.0" prefWidth="121.0" text="Browse" />
+      <Label fx:id="filePathLabel" layoutX="102.0" layoutY="168.0" prefHeight="29.0" prefWidth="297.0" text="File Path here" />
    </children>
 </AnchorPane>

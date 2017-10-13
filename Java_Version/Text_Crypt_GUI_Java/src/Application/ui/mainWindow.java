@@ -1,7 +1,6 @@
 package Application.ui;
 import javafx.stage.Stage;
 import Application.logic.model;
-import javafx.event.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -20,21 +19,12 @@ public class mainWindow {
 		root.getChildren().add(bt);
 		this.stage.setScene(scene);
 		*/
-		model model = new model(this);
+		model = new model(this);
 		root = FXMLLoader.load(getClass().getResource("Forms/main_screen.fxml"));
 		Scene scene = new Scene(root, 500, 500);
 		this.stage = stage;
 		this.stage.setScene(scene);
 		this.stage.show();
-	}
-	
-	
-	private class browseHandler implements EventHandler<ActionEvent> {
-	    
-		@Override
-	     public void handle(ActionEvent event) {
-	         System.exit(0);
-	     }
 	}
 		
 	
