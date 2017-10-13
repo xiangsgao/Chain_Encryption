@@ -13,19 +13,19 @@ public class mainWindow {
 	
 	public mainWindow(Stage stage) throws Exception{
 		/* This is how you do it without forms
-		model model = new model(this);
 		root = new StackPane();
 		Button bt = new Button("Browse");
 		// bt.setOnAction(e -> doSomething()); also works 
 		bt.setOnAction(new browseHandler()); 
 		root.getChildren().add(bt);
-		this.stage = stage;
 		this.stage.setScene(scene);
 		*/
+		model model = new model(this);
 		root = FXMLLoader.load(getClass().getResource("Forms/main_screen.fxml"));
 		Scene scene = new Scene(root, 500, 500);
-		stage.setScene(scene);
-		stage.show();
+		this.stage = stage;
+		this.stage.setScene(scene);
+		this.stage.show();
 	}
 	
 	
