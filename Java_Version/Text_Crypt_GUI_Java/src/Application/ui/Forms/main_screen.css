@@ -1,0 +1,16 @@
+#browseButton{
+	-fx-front-size: 30px;
+	/*-fx-background-color: yellow;*/
+	/*-fx-text-fill: blue;*/
+	-fx-padding: 6 6 6 6;
+	-fx-front-weight: bold;
+	-fx-border-radius: 8;
+}
+
+
+/*use . instead of # if you wanna change all the widgets
+ * root is the anchor.
+ */
+.root{
+	/*-fx-background-color: blue;*/
+}
