@@ -21,7 +21,7 @@ public class mainWindow {
 		*/
 		model = new model(this);
 		root = FXMLLoader.load(getClass().getResource("Forms/main_screen.fxml"));
-		Scene scene = new Scene(root, 500, 500);
+		Scene scene = new Scene(root);
 		this.stage = stage;
 		this.stage.setScene(scene);
 		this.stage.show();
