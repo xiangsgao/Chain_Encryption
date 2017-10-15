@@ -1,5 +1,6 @@
 package Application.ui;
 import javafx.stage.Stage;
+
 import Application.logic.model;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,9 +20,10 @@ public class mainWindow {
 		root.getChildren().add(bt);
 		this.stage.setScene(scene);
 		*/
-		model = new model(this);
-		root = FXMLLoader.load(getClass().getResource("Forms/main_screen.fxml"));
+		FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/Application/ui/Forms/main_screen.fxml"));
+		root = loader.load();
 		Scene scene = new Scene(root);
+		this.model = new model(this, loader.getController());
 		this.stage = stage;
 		this.stage.setScene(scene);
 		this.stage.show();
