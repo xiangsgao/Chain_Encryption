@@ -53,8 +53,7 @@ public class mainSceneController implements Initializable{
 	public void convertButtonClicked(ActionEvent e) {
 		/*if you don't want to use @FXML, you can also
 		 * get the reference to the control object by using (Button) e.getSourced()*/
-		System.out.println("Debugging: Convert Button Clicked");
-		this.model.convert();
+		this.model.tellUItoDisplayPopUp();
 	}
 	
 	@FXML 

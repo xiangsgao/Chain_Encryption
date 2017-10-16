@@ -1,7 +1,12 @@
 package Application.ui;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import Application.logic.model;
+import Application.logic.Form_Controller.popUpController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -29,6 +34,19 @@ public class mainWindow {
 		this.stage.show();
 	}
 		
+	
+		public void displayPopUp() {
+			FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/Application/ui/Forms/pop_up_Screen.fxml"));
+			try {
+				Parent root = loader.load();
+				popUpController controller = loader.getController(); 
+				controller.initializeData(model);
+				popUp.dispaly(root);
+			} catch (IOException e) {
+				Logger.getLogger(popUp.class.getName()).log(Level.SEVERE, null, e);
+			}
+			
+		}
 	
 	
 }

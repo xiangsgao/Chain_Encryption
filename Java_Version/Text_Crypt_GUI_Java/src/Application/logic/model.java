@@ -1,6 +1,7 @@
 package Application.logic;
 import Application.ui.mainWindow;
 import java.io.File;
+import Application.logic.Form_Controller.popUpController;
 import Application.logic.Form_Controller.mainSceneController;
 
 public class model {
@@ -11,6 +12,7 @@ public class model {
 	private String key = "";
 	private File inputFile;
 	private File outputFile;
+	private popUpController contoller;
 	
 	public model(mainWindow window, mainSceneController mainSceneController){
 		this.window = window;
@@ -24,6 +26,10 @@ public class model {
 	
 	public void browsedClicked() {
 		System.out.println("Success");
+	}
+	
+	public void tellUItoDisplayPopUp() {
+		window.displayPopUp();
 	}
 	
 	
