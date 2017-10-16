@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="200.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="popUpLabel" layoutY="14.0" prefWidth="600.0" text="What you wanna do? Convert to encrypted or decrypted and where to save the thing?">
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </Label>
+      <RadioButton fx:id="encryptRadio" layoutX="14.0" layoutY="50.0" mnemonicParsing="false" text="Encrypt" />
+      <RadioButton fx:id="decryptRadio" layoutX="14.0" layoutY="82.0" mnemonicParsing="false" text="Decrypt" />
+   </children>
+</AnchorPane>
