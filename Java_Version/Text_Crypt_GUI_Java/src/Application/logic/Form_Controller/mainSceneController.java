@@ -46,7 +46,6 @@ public class mainSceneController implements Initializable{
 	
 	public void inializeModel(model model) {
 		this.model = model;
-		model.convert();
 	}
 	
 	
@@ -55,6 +54,7 @@ public class mainSceneController implements Initializable{
 		/*if you don't want to use @FXML, you can also
 		 * get the reference to the control object by using (Button) e.getSourced()*/
 		System.out.println("Debugging: Convert Button Clicked");
+		this.model.convert();
 	}
 	
 	@FXML 

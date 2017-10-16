@@ -1,5 +1,6 @@
 package Application.logic;
 import Application.ui.mainWindow;
+import java.io.File;
 import Application.logic.Form_Controller.mainSceneController;
 
 public class model {
@@ -7,6 +8,9 @@ public class model {
 	private mainSceneController mainSceneController;
 	
 	private mainWindow window;
+	private String key = "";
+	private File inputFile;
+	private File outputFile;
 	
 	public model(mainWindow window, mainSceneController mainSceneController){
 		this.window = window;
