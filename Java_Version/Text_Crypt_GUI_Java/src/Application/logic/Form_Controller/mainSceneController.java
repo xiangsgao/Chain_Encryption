@@ -22,6 +22,7 @@ public class mainSceneController implements Initializable{
 	@FXML 
 	private TextField filePath;
 	
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		/*If reference to other controller is needed, use:
@@ -53,6 +54,7 @@ public class mainSceneController implements Initializable{
 	public void convertButtonClicked(ActionEvent e) {
 		/*if you don't want to use @FXML, you can also
 		 * get the reference to the control object by using (Button) e.getSourced()*/
+		model.setInputFile(this.filePath.getText());
 		this.model.tellUItoDisplayPopUp();
 	}
 	

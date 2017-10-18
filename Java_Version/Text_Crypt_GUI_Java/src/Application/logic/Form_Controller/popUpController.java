@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import Application.logic.model;
+import Application.ui.alertPopUp;
 import Application.ui.popUp;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 
 public class popUpController implements Initializable{
 	
@@ -19,7 +21,7 @@ public class popUpController implements Initializable{
 	@FXML private RadioButton decryptRadio;
 	@FXML private Button cancel;
 	@FXML private Button confirmed;
-	@FXML private Label passwordField;
+	@FXML private TextField passwordField;
 	
 	private model model;
 
@@ -37,7 +39,8 @@ public class popUpController implements Initializable{
 	
 	@FXML 
 	public void confirmedSelected(ActionEvent e) {
-		
+		alertPopUp.display("Not supported yet");
+		popUp.closeWindow();
 	}
 	
 	

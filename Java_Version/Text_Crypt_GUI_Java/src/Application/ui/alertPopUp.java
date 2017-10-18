@@ -1,11 +1,14 @@
-package Application.ui.Forms;
+package Application.ui;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class alertPopUp {
 	
@@ -13,18 +16,22 @@ public class alertPopUp {
 	
 	public static void display(String message) {
 		window = new Stage();
-		window.setResizable(false);
 		window.initModality(Modality.APPLICATION_MODAL);
-		
-		VBox layout = new VBox();
-		Label label = new Label("message");
+		VBox layout = new VBox(10);
+		Label label = new Label(message);
 		Button ok = new Button("OK");
 		ok.setOnAction(e -> close());
 		layout.getChildren().addAll(label, ok);
+		layout.setAlignment(Pos.CENTER);
+		layout.setPadding(new Insets(10));
+		//use this for just one component
+		//layout.setMargin(child, value);
 		Scene scene = new Scene(layout);
-		
+		ok.setMinSize(50, 30);
+		window.setMinWidth(250);
 		window.setScene(scene);
 		window.setTitle("Alert");
+		window.show();
 	}
 	
 	

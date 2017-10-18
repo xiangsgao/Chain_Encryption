@@ -13,6 +13,7 @@ public class model {
 	private File inputFile;
 	private File outputFile;
 	private popUpController contoller;
+	private boolean encryptedMode = true;
 	
 	public model(mainWindow window, mainSceneController mainSceneController){
 		this.window = window;
@@ -21,7 +22,7 @@ public class model {
 	}
 	
 	public void convert() {
-		System.out.println("Debugging: Convert Success!");
+
 	}
 	
 	public void browsedClicked() {
@@ -30,6 +31,18 @@ public class model {
 	
 	public void tellUItoDisplayPopUp() {
 		window.displayPopUp();
+	}
+	
+	public void setInputFile(String inputFilePath) {
+		inputFile = new File(inputFilePath);
+	}
+	
+	public void setOutPutFile(String outPutFilePath) {
+		this.outputFile = new File(outPutFilePath);
+	}
+	
+	public void setEncrycted(boolean mode) {
+		this.encryptedMode = mode;
 	}
 	
 	
