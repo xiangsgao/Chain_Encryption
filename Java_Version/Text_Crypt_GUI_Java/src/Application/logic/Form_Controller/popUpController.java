@@ -10,7 +10,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 
@@ -21,7 +23,9 @@ public class popUpController implements Initializable{
 	@FXML private RadioButton decryptRadio;
 	@FXML private Button cancel;
 	@FXML private Button confirmed;
-	@FXML private TextField passwordField;
+	@FXML private PasswordField passwordField;
+	@FXML CheckBox showCheckBox;
+	@FXML TextField unhiddenPasswordField;
 	
 	private model model;
 
@@ -30,6 +34,27 @@ public class popUpController implements Initializable{
 		cancel.setOnAction(e -> popUp.closeWindow());
 		this.encryptRadio.setSelected(true);
 		this.decryptRadio.setSelected(false);
+		
+		
+		
+		this.showCheckBox.setOnAction(e -> {
+			if(this.showCheckBox.isSelected()) {
+				this.passwordField.setVisible(false);
+				this.unhiddenPasswordField.setVisible(true);
+				this.unhiddenPasswordField.setText(this.passwordField.getText());
+			}
+			else {
+				this.unhiddenPasswordField.setVisible(false);
+				this.passwordField.setVisible(true);
+			}
+		});
+		this.passwordField.setText(this.unhiddenPasswordField.getText());
+		this.unhiddenPasswordField.setVisible(false);
+		this.passwordField.setVisible(true);
+		this.passwordField.setText(this.unhiddenPasswordField.getText());
+		this.unhiddenPasswordField.setVisible(false);
+		this.passwordField.setVisible(true);
+		
 	}
 	
 	
