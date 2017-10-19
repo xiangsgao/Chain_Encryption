@@ -33,7 +33,7 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </Button>
-            <TextField fx:id="popUpBrowsePath" prefWidth="350.0">
+            <TextField fx:id="popUpBrowsePath" prefWidth="350.0" promptText="save location">
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>

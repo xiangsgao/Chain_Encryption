@@ -18,7 +18,6 @@ import javafx.scene.control.TextField;
 
 public class popUpController implements Initializable{
 	
-	@FXML private Label popUpLabel;
 	@FXML private RadioButton encryptRadio;
 	@FXML private RadioButton decryptRadio;
 	@FXML private Button cancel;
@@ -26,6 +25,7 @@ public class popUpController implements Initializable{
 	@FXML private PasswordField passwordField;
 	@FXML CheckBox showCheckBox;
 	@FXML TextField unhiddenPasswordField;
+	@FXML TextField popUpBrowsePath;
 	
 	private model model;
 
