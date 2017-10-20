@@ -6,6 +6,10 @@ public class cryptoException extends Exception {
 
 	public cryptoException() {
     }
+	
+	public cryptoException(String message) {
+		super(message);
+	}
  
     public cryptoException(String message, Throwable throwable) {
         super(message, throwable);
