@@ -26,7 +26,6 @@ import javax.crypto.spec.SecretKeySpec;
  * None of the code below is my own. All credit goes to the original author.
  */
 public class cryptoUtils {
-    private static final String ALGORITHM = "AES";
     private static final String TRANSFORMATION = "AES";
  
     public static void encrypt(String key, File inputFile, File outputFile)

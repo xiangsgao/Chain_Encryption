@@ -52,7 +52,7 @@ public class mainSceneController implements Initializable{
 		    	mainSceneController.this.convertButton.setDisable(true);
 		    }
 		});
-		filePath.setPromptText(".txt file only beacuse the programmer is a noob");
+		filePath.setPromptText("Click on browse to select path. .txt file only");
 	}
 	
 	public void inializeModel(model model) {
@@ -87,7 +87,11 @@ public class mainSceneController implements Initializable{
 		FileChooser chooser = new FileChooser();
 		//this makes sure that only .text file is selected
 		chooser.getExtensionFilters().addAll(new ExtensionFilter("*.txt", "*.txt"));
+		try {
 		this.filePath.setText(chooser.showOpenDialog(null).getAbsolutePath()); 
+		}catch(NullPointerException f) {
+			System.out.println("User did not enter input\nNo worries");
+		}
 	}
 
 }

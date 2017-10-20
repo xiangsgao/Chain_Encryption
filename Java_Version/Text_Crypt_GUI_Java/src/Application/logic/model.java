@@ -25,7 +25,7 @@ public class model {
 		if(this.encryptedMode) {
 			try {
 				this.encrypt();
-				alertPopUp.display("Success!\nI do not guranteed this will protect your corporate secret or you from the NSA though");
+				alertPopUp.display("Success!\nI do not guranteed this will protect your corporate secret or you from law enforcements though");
 			} catch (cryptoException e) {
 				alertPopUp.display(e.getMessage());
 			}
