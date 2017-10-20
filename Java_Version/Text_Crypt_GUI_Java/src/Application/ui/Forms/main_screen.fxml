@@ -9,7 +9,7 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Application.logic.Form_Controller.mainSceneController">
    <children>
-      <Label fx:id="instructionLabel" text="Click on browse to select a text file to convert" VBox.vgrow="ALWAYS">
+      <Label fx:id="instructionLabel" text="Click on browse to select a text file to convert." VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets bottom="10.0" left="135.0" right="10.0" top="10.0" />
          </VBox.margin>

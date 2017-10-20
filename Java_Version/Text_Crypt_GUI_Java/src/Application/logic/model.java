@@ -33,8 +33,8 @@ public class model {
 		window.displayPopUp();
 	}
 	
-	public void setInputFile(String inputFilePath) {
-		inputFile = new File(inputFilePath);
+	public void setInputFile(String input) {
+		inputFile = new File(input);
 	}
 	
 	public void setOutPutFile(String outPutFilePath) {
