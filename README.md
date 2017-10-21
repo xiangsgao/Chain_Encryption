@@ -1,5 +1,6 @@
 # Text-Crypt
-The purpose of this app is to encrypt your text file into total gibberish, which is useful if you want something like a master file to store all your online passwords or send secret messages over email. The encryption is based on AES 128 bit standard.
+The purpose of this app is to encrypt your file into total gibberish, which is useful if you want something like a master file to store all your online passwords or send secret messages over email. The encryption is based on AES 128 bit standard.
+So far it can supports .txt files and ..... pretty much everything else. :-D
 
 # Java veriosn instruction 
 Java version is finished. Download the Text-Crypt.jar in java version folder and make it executable to run the application. Make sure java runtime enviorment from the oracle website is installed before hand. I am not packging the jar into a windows .exe executable because it defeats the whole purpose of cross platform language like java
