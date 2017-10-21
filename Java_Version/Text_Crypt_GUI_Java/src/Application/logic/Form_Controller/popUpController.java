@@ -38,19 +38,23 @@ public class popUpController implements Initializable{
 		cancel.setOnAction(e -> popUp.closeWindow());
 		this.encryptRadio.setSelected(true);
 		this.decryptRadio.setSelected(false);
+		this.passwordField.textProperty().addListener((obs,oldText,newText)-> {
+			this.unhiddenPasswordField.setText(this.passwordField.getText());
+		});
 		
+		this.unhiddenPasswordField.textProperty().addListener((obs,oldText,newText)-> {
+			this.passwordField.setText(this.unhiddenPasswordField.getText());
+		});
 		
 		
 		this.showCheckBox.setOnAction(e -> {
 			if(this.showCheckBox.isSelected()) {
 				this.passwordField.setVisible(false);
 				this.unhiddenPasswordField.setVisible(true);
-				this.unhiddenPasswordField.setText(this.passwordField.getText());
 			}
 			else {
 				this.unhiddenPasswordField.setVisible(false);
 				this.passwordField.setVisible(true);
-				this.passwordField.setText(this.unhiddenPasswordField.getText());
 			}
 		});
 		this.passwordField.setText(this.unhiddenPasswordField.getText());
@@ -96,7 +100,11 @@ public class popUpController implements Initializable{
 		DirectoryChooser chooser = new DirectoryChooser();
 		chooser.setTitle("Save Location");
 		// null pointer error here, don't care cuz code still works 
+		try {
 		this.popUpBrowsePath.setText(chooser.showDialog(null).getAbsolutePath());
+		} catch(NullPointerException f) {
+			System.out.println("Null on pop up browse path, no worries");
+		}
 	}
 	
 	

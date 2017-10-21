@@ -13,7 +13,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 
 public class mainSceneController implements Initializable{
 	
@@ -52,7 +51,7 @@ public class mainSceneController implements Initializable{
 		    	mainSceneController.this.convertButton.setDisable(true);
 		    }
 		});
-		filePath.setPromptText("Click on browse to select path. .txt file only");
+		filePath.setPromptText("Click on browse to select a file");
 	}
 	
 	public void inializeModel(model model) {
@@ -73,9 +72,6 @@ public class mainSceneController implements Initializable{
 		else if(!Files.exists(path)) {
 			alertPopUp.display("Please enter a valid file path.\nUse the browse button to help you.");
 		}
-		else if(!this.filePath.getText().substring(this.filePath.getText().length() - 4).equalsIgnoreCase(".txt")) {
-			alertPopUp.display("Invalid path or this is not a .txt file.\nYou trying to manually enter a nonsupported file?\nHaha, I am not that noob");
-		}
 		else {
 			this.model.setInputFile(this.filePath.getText());
 			this.model.tellUItoDisplayPopUp();
@@ -85,8 +81,8 @@ public class mainSceneController implements Initializable{
 	@FXML 
 	public void browseButtonClicked(ActionEvent e) {
 		FileChooser chooser = new FileChooser();
-		//this makes sure that only .text file is selected
-		chooser.getExtensionFilters().addAll(new ExtensionFilter("*.txt", "*.txt"));
+		//this makes sure that only .text file is selected, no need cuz AES encrypts all files
+		//chooser.getExtensionFilters().addAll(new ExtensionFilter("*.txt", "*.txt"));
 		try {
 		this.filePath.setText(chooser.showOpenDialog(null).getAbsolutePath()); 
 		}catch(NullPointerException f) {
