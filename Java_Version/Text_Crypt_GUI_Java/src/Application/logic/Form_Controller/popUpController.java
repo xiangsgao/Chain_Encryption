@@ -10,6 +10,7 @@ import Application.logic.model;
 import Application.ui.alertPopUp;
 import Application.ui.popUp;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -17,6 +18,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.DirectoryChooser;
 
 public class popUpController implements Initializable{
@@ -63,6 +66,8 @@ public class popUpController implements Initializable{
 		this.passwordField.setText(this.unhiddenPasswordField.getText());
 		this.unhiddenPasswordField.setVisible(false);
 		this.passwordField.setVisible(true);
+		this.passwordField.setOnKeyPressed(new enterHandler());
+		this.unhiddenPasswordField.setOnKeyPressed(new enterHandler());
 		
 	}
 	
@@ -108,7 +113,18 @@ public class popUpController implements Initializable{
 	}
 	
 	
-	
+	private class enterHandler implements EventHandler<KeyEvent>{
+
+		@Override
+		public void handle(KeyEvent e) {
+			 if (e.getCode().equals(KeyCode.ENTER))
+	            {
+	                popUpController.this.confirmedSelected(new ActionEvent());
+	            }
+			
+		}
+		
+	}
 	
 	
 	

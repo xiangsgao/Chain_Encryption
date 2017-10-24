@@ -70,8 +70,8 @@ public class cryptoUtils {
     // generating cryto key using salt. This allows user to enter unique keys of any length, none zero of course
     private static SecretKey generateCrytoKey(String userKey) {
     	char[] charKey = {userKey.charAt(0)};
-		byte[] salt = new String (charKey).getBytes();
-		charKey = userKey.toCharArray();
+    	byte[] salt = new String (charKey).getBytes();
+	    charKey = userKey.toCharArray();
 		SecretKeyFactory factory;
 		try {
 			factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");

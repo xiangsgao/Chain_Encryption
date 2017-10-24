@@ -8,10 +8,13 @@ import java.util.ResourceBundle;
 import Application.logic.model;
 import Application.ui.alertPopUp;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 
 public class mainSceneController implements Initializable{
@@ -51,6 +54,18 @@ public class mainSceneController implements Initializable{
 		    	mainSceneController.this.convertButton.setDisable(true);
 		    }
 		});
+		
+		// This adds the enter key function to text field
+		this.filePath.setOnKeyPressed(new EventHandler<KeyEvent>() {
+	        @Override
+	        public void handle(KeyEvent ke)
+	        {
+	            if (ke.getCode().equals(KeyCode.ENTER))
+	            {
+	                mainSceneController.this.convertButtonClicked(new ActionEvent());
+	            }
+	        }
+	    });
 		filePath.setPromptText("Click on browse to select a file");
 	}
 	
