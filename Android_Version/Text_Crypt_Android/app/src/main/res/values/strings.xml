@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Text Crypt</string>
+    <string name="convert_button">Convert</string>
+    <string name="instruction_label">Click on the browse to select a file to convert</string>
 </resources>

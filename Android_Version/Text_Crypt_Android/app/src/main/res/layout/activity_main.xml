@@ -6,4 +6,33 @@
     android:layout_height="match_parent"
     tools:context="xgao.com.text_crypt_android.MainActivity">
 
+    <RelativeLayout
+        android:layout_width="384dp"
+        android:layout_height="225dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <Button
+            android:id="@+id/convertButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/instructionLabel"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="56dp"
+            android:text="@string/convert_button"
+            tools:layout_editor_absoluteX="81dp"
+            tools:layout_editor_absoluteY="172dp" />
+
+        <TextView
+            android:id="@+id/instructionLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="TextView"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="153dp"
+            tools:text="@string/instruction_label" />
+    </RelativeLayout>
+
 </android.support.constraint.ConstraintLayout>
