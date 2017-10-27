@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="xgao.com.text_crypt_android.MainActivity">
@@ -33,8 +34,8 @@
         android:layout_height="40dp"
         android:layout_alignTop="@+id/browseInput"
         android:layout_toEndOf="@+id/browseInput"
-        android:ems="10"
         android:backgroundTint="@color/colorPrimaryDark"
+        android:ems="10"
         android:hint="@string/input_path_hint"
         android:inputType="textPersonName" />
 
@@ -65,8 +66,8 @@
         android:layout_height="40dp"
         android:layout_alignTop="@+id/browseOutput"
         android:layout_toEndOf="@+id/browseOutput"
-        android:ems="10"
         android:backgroundTint="@color/colorPrimaryDark"
+        android:ems="10"
         android:hint="@string/output_Path_hint"
         android:inputType="textPersonName" />
 
@@ -77,10 +78,10 @@
         android:layout_below="@+id/outPutPath"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
+        android:text="@string/instruction_label3"
         android:textColor="#000000"
         android:textSize="15dp"
-        android:textStyle="bold"
-        android:text="@string/instruction_label3" />
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/passWordInput"
@@ -89,20 +90,19 @@
         android:layout_below="@+id/instructionLabel3"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="14dp"
-        android:ems="10"
         android:backgroundTint="@color/colorPrimaryDark"
+        android:ems="10"
         android:hint="@string/key_input_hint"
         android:inputType="textPassword" />
 
     <EditText
-        android:id="@+id/editText8"
+        android:id="@+id/passwordConfirmed"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_below="@+id/passWordInput"
-        android:layout_centerHorizontal="true"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:ems="10"
         android:hint="@string/key_input_confirmed_hint"
-        android:backgroundTint="@color/colorPrimaryDark"
         android:inputType="textPassword" />
 
     <CheckBox
@@ -110,38 +110,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/editText8"
+        android:layout_below="@+id/passwordConfirmed"
         android:text="@string/show_password" />
 
-    <RadioButton
-        android:id="@+id/encryptRadio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView3"
-        android:layout_marginTop="12dp"
-        android:layout_toEndOf="@+id/browseOutput"
-        android:text="@string/encrypt_radio" />
-
-    <RadioButton
-        android:id="@+id/radioButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/encryptRadio"
-        android:layout_alignBottom="@+id/encryptRadio"
-        android:layout_alignEnd="@+id/textView3"
-        android:text="@string/decrypt_radio" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/encryptRadio"
-        android:layout_below="@+id/showPassword"
-        android:layout_marginTop="12dp"
-        android:text="@string/instruction_label4"
-        android:textColor="#000000"
-        android:textSize="15dp"
-        android:textStyle="bold" />
 
     <Button
         android:id="@+id/convertButton"
@@ -150,5 +121,45 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:text="@string/convert_button" />
+
+    <TextView
+        android:id="@+id/instructionLabel4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/showPassword"
+        android:layout_centerHorizontal="true"
+        android:textColor="#000000"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:text="@string/instruction_label4" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation='horizontal'
+        android:layout_below="@id/instructionLabel4"
+        android:layout_centerHorizontal="true">
+
+        <RadioButton
+            android:id="@+id/encrypt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:checked="true"
+            android:text="@string/decrypt_radio"
+            android:textSize="15dp"/>
+
+        <RadioButton
+            android:id="@+id/decryptRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/decrypt_radio"
+            android:layout_margin="15dp"
+            android:textSize="15dp"/>
+
+
+    </RadioGroup>
+
 
 </RelativeLayout>
