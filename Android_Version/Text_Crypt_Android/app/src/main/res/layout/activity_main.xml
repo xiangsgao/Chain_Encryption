@@ -7,8 +7,8 @@
     tools:context="xgao.com.text_crypt_android.MainActivity">
 
     <RelativeLayout
-        android:layout_width="384dp"
-        android:layout_height="225dp"
+        android:layout_width="386dp"
+        android:layout_height="wrap_content"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp">
 
