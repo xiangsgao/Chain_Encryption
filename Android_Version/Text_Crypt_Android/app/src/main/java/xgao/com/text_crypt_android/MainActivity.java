@@ -1,5 +1,6 @@
 package xgao.com.text_crypt_android;
 
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import xgao.com.text_crypt_android.logic.model;
