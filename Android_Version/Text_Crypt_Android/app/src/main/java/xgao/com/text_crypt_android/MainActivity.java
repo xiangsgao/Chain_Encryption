@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         // use intent.setType("image/*"); to choose only image file
         // Do this if you need to be able to open the returned URI as a stream
+        // use this to choose all files
+        intent.setType("file/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         try {
             startActivityForResult(Intent.createChooser(intent, "Select a file to convert"), intentCodes.REQUEST_FILE);
