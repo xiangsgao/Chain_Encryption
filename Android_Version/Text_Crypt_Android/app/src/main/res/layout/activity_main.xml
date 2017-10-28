@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="15dp"
         android:text="@string/instruction_label1"
         android:textColor="#000000"
         android:textSize="15dp"
@@ -25,7 +25,7 @@
         android:layout_height="40dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/instructionLabel1"
-        android:layout_marginTop="21dp"
+        android:layout_marginTop="15dp"
         android:onClick="browseInputClicked"
         android:text="@string/browse_button" />
 
@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/browseInput"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:text="@string/instruction_label2"
         android:textColor="#000000"
         android:textSize="15dp"
@@ -58,7 +58,7 @@
         android:layout_height="40dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/instructionLabel2"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="15dp"
         android:text="@string/browse_button" />
 
     <EditText
@@ -78,7 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/outPutPath"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:text="@string/instruction_label3"
         android:textColor="#000000"
         android:textSize="15dp"
@@ -90,7 +90,7 @@
         android:layout_height="40dp"
         android:layout_below="@+id/instructionLabel3"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="15dp"
         android:backgroundTint="@color/colorPrimaryDark"
         android:ems="10"
         android:hint="@string/key_input_hint"
@@ -129,6 +129,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/showPassword"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
         android:textColor="#000000"
         android:textSize="15dp"
         android:textStyle="bold"

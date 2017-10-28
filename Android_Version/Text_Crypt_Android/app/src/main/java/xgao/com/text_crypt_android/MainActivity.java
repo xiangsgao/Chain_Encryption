@@ -3,14 +3,16 @@ package xgao.com.text_crypt_android;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+
+import java.io.File;
 
 import xgao.com.text_crypt_android.logic.intentCodes;
 import xgao.com.text_crypt_android.logic.model;
@@ -58,26 +60,21 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void browseInputClicked(View view){
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
         // use intent.setType("image/*"); to choose only image file
-        // Do this if you need to be able to open the returned URI as a stream
         // use this to choose all files
         intent.setType("file/*");
+        // Do this if you need to be able to open the returned URI as a stream
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        try {
-            startActivityForResult(Intent.createChooser(intent, "Select a file to convert"), intentCodes.REQUEST_FILE);
-        } catch (android.content.ActivityNotFoundException ex) {
-            // Potentially direct the user to the Market with a Dialog
-            Toast.makeText(this, "Please install a File Manager.", Toast.LENGTH_SHORT).show();
-        }
-
+        startActivityForResult(Intent.createChooser(intent, "Select a file to convert"), intentCodes.REQUEST_FILE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent result) {
-        switch (resultCode){
-            case intentCodes.REQUEST_FILE : Uri data = result.getData();
-            model.setInputFile(data.toString());
+        switch (requestCode){
+            case intentCodes.REQUEST_FILE :
+            this.inputPath.setText(new File(result.getData().toString()).getAbsolutePath());
             break;
         }
     }
