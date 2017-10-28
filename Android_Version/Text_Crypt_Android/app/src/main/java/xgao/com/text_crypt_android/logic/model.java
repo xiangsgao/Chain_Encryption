@@ -24,6 +24,12 @@ public class model implements Parcelable{
     public model() {
     }
 
+
+
+    public void setInputFile(String input){
+        this.input = new File(input);
+    }
+
     @Override
     public int describeContents() {
         return 0;

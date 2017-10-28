@@ -26,6 +26,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/instructionLabel1"
         android:layout_marginTop="21dp"
+        android:onClick="browseInputClicked"
         android:text="@string/browse_button" />
 
     <EditText
