@@ -5,12 +5,12 @@
     <string name="input_path_hint">File to convert</string>
     <string name="instruction_label2">Click browse to choose a location for converted file</string>
     <string name="output_Path_hint">Converted file save location</string>
-    <string name="instruction_label3">Choose an encryption Key, try remembering it</string>
+    <string name="instruction_label3">Choose an encryption key, try remembering it</string>
     <string name="key_input_hint">Type an unique password</string>
     <string name="key_input_confirmed_hint">Retype to confirmed</string>
     <string name="show_password">Show password</string>
     <string name="encrypt_radio">Encrypt</string>
     <string name="decrypt_radio">Decrypt</string>
-    <string name="instruction_label4">Convert to encrypt or decrypt?</string>
+    <string name="instruction_label4">Convert to encrypted or decrypted file?</string>
     <string name="convert_button">CONVERT</string>
 </resources>

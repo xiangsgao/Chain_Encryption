@@ -113,6 +113,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/passwordConfirmed"
+        android:onClick="passwordCheckChanged"
+        android:buttonTint="@color/colorPrimaryDark"
         android:text="@string/show_password" />
 
 
@@ -149,9 +151,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
+            android:buttonTint="@color/colorPrimaryDark"
             android:checked="true"
-            android:text="@string/decrypt_radio"
-            android:textSize="15dp"/>
+            android:text="@string/encrypt_radio"
+            android:onClick="onEncryptSelected"
+            android:textSize="15dp" />
 
         <RadioButton
             android:id="@+id/decryptRadio"
@@ -159,6 +163,8 @@
             android:layout_height="wrap_content"
             android:text="@string/decrypt_radio"
             android:layout_margin="15dp"
+            android:buttonTint="@color/colorPrimaryDark"
+            android:onClick="onDecrytptSelect"
             android:textSize="15dp"/>
 
 
