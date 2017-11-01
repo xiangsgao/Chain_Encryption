@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import xgao.com.text_crypt_android.File_Browser.FileBrowserActivity;
 import xgao.com.text_crypt_android.File_Browser.pathResolver;
 import java.io.File;
 
@@ -83,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
     public void openFileClicked(View view){
         // This lets an app to browse the file but doesn't return the file uri. The opening folder is defined by Uri
         // Environment will return the path to the default home directory
-        Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory().getPath());
-       // Uri selectedUri = Uri.fromFile(new File(String.valueOf(this.outputPath.getText())));
+        // Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory().getPath());
+        Uri selectedUri = Uri.fromFile(new File(String.valueOf(this.outputPath.getText())));
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(selectedUri,  "*/*");
         startActivity(intent);
@@ -109,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
                     if (result == null) {
                         break;
                     }
+                    this.outputPath.setText(result.getStringExtra(FileBrowserActivity.CHOSEN_DIRECTORY));
                     break;
             }
 
@@ -126,13 +129,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void browseOutputClicked(View view) {
         // This chooses the directory only and does not return uri like the Intent.GET_DOCUMENT_TREE but return the full file path if using es file manager
-        Intent intent = new Intent();
-        intent.setType(DocumentsContract.Document.MIME_TYPE_DIR);
-        if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
-            startActivityForResult(Intent.createChooser(intent, "Choose ES File Explorer to pick directory, download it from playstore if you don't have it installed already"), intentCodes.REQUEST_DIRECTORY);
-        } else {
-            Toast.makeText(this.getApplicationContext(), "Please install ES File Manager", Toast.LENGTH_SHORT).show();
-        }
+//        Intent intent = new Intent();
+//        intent.setType(DocumentsContract.Document.MIME_TYPE_DIR);
+//        if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
+//            startActivityForResult(Intent.createChooser(intent, "Choose ES File Explorer to pick directory, download it from playstore if you don't have it installed already"), intentCodes.REQUEST_DIRECTORY);
+//        } else {
+//            Toast.makeText(this.getApplicationContext(), "Please install ES File Manager", Toast.LENGTH_SHORT).show();
+//        }
+
+        Intent intent = new Intent(MainActivity.this, FileBrowserActivity.class);
+        startActivityForResult(intent,intentCodes.REQUEST_DIRECTORY);
 
 
     }

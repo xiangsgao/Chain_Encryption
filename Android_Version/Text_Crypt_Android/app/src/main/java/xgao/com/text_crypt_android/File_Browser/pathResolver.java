@@ -1,9 +1,12 @@
 package xgao.com.text_crypt_android.File_Browser;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.ListActivity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -11,9 +14,13 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 /**
  * Much of the code comes from https://gist.github.com/asifmujteba/d89ba9074bc941de1eaa#file-asfurihelper
+ *
+ * This library is decapitated, I kept it for future reference
  */
 
 public class pathResolver {
@@ -155,6 +162,8 @@ public class pathResolver {
         returnCursor.moveToFirst();
         return returnCursor.getString(nameIndex);
     }
+
+
 
 
 
