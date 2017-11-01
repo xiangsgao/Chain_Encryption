@@ -1,4 +1,4 @@
-package xgao.com.text_crypt_android.logic;
+package xgao.com.text_crypt_android.File_Browser;
 
 import android.app.Activity;
 import android.content.ContentUris;

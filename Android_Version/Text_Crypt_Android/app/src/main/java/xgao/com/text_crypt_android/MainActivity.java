@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.HideReturnsTransformationMethod;
@@ -15,9 +16,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import xgao.com.text_crypt_android.logic.pathResolver;
+import xgao.com.text_crypt_android.File_Browser.pathResolver;
 import java.io.File;
-import java.io.IOException;
 
 import xgao.com.text_crypt_android.logic.intentCodes;
 import xgao.com.text_crypt_android.logic.model;
@@ -83,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
     public void openFileClicked(View view){
         // This lets an app to browse the file but doesn't return the file uri. The opening folder is defined by Uri
         // Environment will return the path to the default home directory
-        // Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory().getPath());
-        Uri selectedUri = Uri.fromFile(new File(String.valueOf(this.outputPath.getText())));
+        Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory().getPath());
+       // Uri selectedUri = Uri.fromFile(new File(String.valueOf(this.outputPath.getText())));
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(selectedUri,  "*/*");
         startActivity(intent);
@@ -92,24 +92,34 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent result) {
-        switch (requestCode) {
+        if(resultCode == RESULT_OK) {
 
-            case intentCodes.REQUEST_FILE:
-                if (result == null) {
-                    break;
-                }
-                this.inputPath.setText(pathResolver.getFileName(result.getData(), this));
-                break;
 
-            case intentCodes.REQUEST_DIRECTORY:
-                if (result == null) {
+
+
+            switch (requestCode) {
+                case intentCodes.REQUEST_FILE:
+                    if (result == null) {
+                        break;
+                    }
+                    this.inputPath.setText(pathResolver.getFileName(result.getData(), this));
                     break;
-                }
-                try {
-                    this.outputPath.setText(new File(result.getData().getPath()).getCanonicalPath());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+                case intentCodes.REQUEST_DIRECTORY:
+                    if (result == null) {
+                        break;
+                    }
+                    break;
+            }
+
+
+
+
+
+
+
+
+
         }
     }
 
@@ -129,10 +139,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void onEncryptSelected(View view) {
         this.encryptionMode = ENCRYPTMODE;
+        this.passWordConfirmed.setVisibility(View.VISIBLE);
     }
 
     public void onDecrytptSelect(View view) {
         this.encryptionMode = DECRYPTMODE;
+        this.passWordConfirmed.setVisibility(View.GONE);
     }
 
     public void passwordCheckChanged(View view) {
