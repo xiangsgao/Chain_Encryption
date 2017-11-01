@@ -3,16 +3,21 @@ package xgao.com.text_crypt_android;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
-
-
+import xgao.com.text_crypt_android.logic.pathResolver;
+import java.io.File;
+import java.io.IOException;
 
 import xgao.com.text_crypt_android.logic.intentCodes;
 import xgao.com.text_crypt_android.logic.model;
@@ -28,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText password;
     private EditText passWordConfirmed;
     private String encryptionMode = ENCRYPTMODE;
+    private ImageButton openFile;
+    private TextView openFileLabel;
 
 
     @Override
@@ -36,16 +43,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         inputPath = (EditText) this.findViewById(R.id.inputPath);
+        this.inputPath.setFocusable(false);
         outputPath = (EditText) this.findViewById(R.id.outPutPath);
         password = (EditText) this.findViewById(R.id.passWordInput);
         passWordConfirmed = (EditText) this.findViewById(R.id.passwordConfirmed);
+        openFile = (ImageButton) this.findViewById(R.id.openFile);
+        openFileLabel = (TextView) findViewById(R.id.openFileLabel);
+        openFileLabel.setVisibility(View.GONE);
+        openFile.setEnabled(false);
+        openFile.setVisibility(View.GONE);
         model = new model();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
 
     public void convertClicked(View view) {
-
+            this.openFileLabel.setVisibility(View.VISIBLE);
+            this.openFile.setVisibility(View.VISIBLE);
+            this.openFile.setEnabled(true);
     }
 
 
@@ -58,17 +73,21 @@ public class MainActivity extends AppCompatActivity {
         // Do this if you need to be able to open the returned URI as a stream
         // intent.addCategory(Intent.CATEGORY_OPENABLE);
         if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
-            startActivityForResult(Intent.createChooser(intent, "Select a file to convert"), intentCodes.REQUEST_FILE);
+            startActivityForResult(Intent.createChooser(intent, "Choose any file manager to pick a file to convert"), intentCodes.REQUEST_FILE);
         } else {
             Toast.makeText(this.getApplicationContext(), "No file browser found", Toast.LENGTH_SHORT).show();
         }
 
-//        This lets an app to browse the file but doesn't return the file uri
-//        Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory().getPath());
-//        Intent intent = new Intent(Intent.ACTION_VIEW);
-//        intent.setDataAndType(selectedUri,  "*/*");
-//
+    }
 
+    public void openFileClicked(View view){
+        // This lets an app to browse the file but doesn't return the file uri. The opening folder is defined by Uri
+        // Environment will return the path to the default home directory
+        // Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory().getPath());
+        Uri selectedUri = Uri.fromFile(new File(String.valueOf(this.outputPath.getText())));
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(selectedUri,  "*/*");
+        startActivity(intent);
     }
 
     @Override
@@ -79,25 +98,31 @@ public class MainActivity extends AppCompatActivity {
                 if (result == null) {
                     break;
                 }
-                this.inputPath.setText(result.getData().getPath());
+                this.inputPath.setText(pathResolver.getFileName(result.getData(), this));
                 break;
 
             case intentCodes.REQUEST_DIRECTORY:
                 if (result == null) {
                     break;
                 }
-                this.outputPath.setText(result.getData().getPath());
-                break;
-
+                try {
+                    this.outputPath.setText(new File(result.getData().getPath()).getCanonicalPath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
         }
     }
 
 
     public void browseOutputClicked(View view) {
-        // This chooses the directory only
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        startActivityForResult(Intent.createChooser(intent, "Select a directory to save"), intentCodes.REQUEST_DIRECTORY);
+        // This chooses the directory only and does not return uri like the Intent.GET_DOCUMENT_TREE but return the full file path if using es file manager
+        Intent intent = new Intent();
+        intent.setType(DocumentsContract.Document.MIME_TYPE_DIR);
+        if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
+            startActivityForResult(Intent.createChooser(intent, "Choose ES File Explorer to pick directory, download it from playstore if you don't have it installed already"), intentCodes.REQUEST_DIRECTORY);
+        } else {
+            Toast.makeText(this.getApplicationContext(), "Please install ES File Manager", Toast.LENGTH_SHORT).show();
+        }
 
 
     }

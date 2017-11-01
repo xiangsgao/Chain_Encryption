@@ -11,6 +11,7 @@
     <string name="show_password">Show password</string>
     <string name="encrypt_radio">Encrypt</string>
     <string name="decrypt_radio">Decrypt</string>
+    <string name="open_file_label">Open</string>
     <string name="instruction_label4">Convert to encrypted or decrypted file?</string>
     <string name="convert_button">CONVERT</string>
 </resources>

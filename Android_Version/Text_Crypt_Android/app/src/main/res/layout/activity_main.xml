@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -13,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="15sp"
         android:text="@string/instruction_label1"
         android:textColor="#000000"
         android:textSize="15dp"
@@ -46,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/browseInput"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="15sp"
         android:text="@string/instruction_label2"
         android:textColor="#000000"
         android:textSize="15dp"
@@ -79,7 +81,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/outPutPath"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="15sp"
         android:text="@string/instruction_label3"
         android:textColor="#000000"
         android:textSize="15dp"
@@ -118,13 +120,6 @@
         android:text="@string/show_password" />
 
 
-    <Button
-        android:id="@+id/convertButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/convert_button" />
 
     <TextView
         android:id="@+id/instructionLabel4"
@@ -134,7 +129,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         android:textColor="#000000"
-        android:textSize="15dp"
+        android:textSize="15sp"
         android:textStyle="bold"
         android:text="@string/instruction_label4" />
 
@@ -170,5 +165,36 @@
 
     </RadioGroup>
 
+    <ImageButton
+        android:id="@+id/openFile"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/radioGroup1"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/tint_for_image_button"
+        android:onClick="openFileClicked"/>
+
+    <TextView
+        android:id="@+id/openFileLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/openFile"
+        android:text="@string/open_file_label"
+        android:layout_centerHorizontal="true"
+        android:textColor="#000000"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/convertButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:onClick="convertClicked"
+        android:text="@string/convert_button" />
+
+
 
 </RelativeLayout>
+
+
