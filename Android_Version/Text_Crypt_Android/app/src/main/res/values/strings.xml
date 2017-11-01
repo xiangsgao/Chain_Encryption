@@ -15,4 +15,5 @@
     <string name="instruction_label4">Convert to encrypted or decrypted file?</string>
     <string name="convert_button">CONVERT</string>
     <string name="title_activity_file_browser">FileBrowserActivity</string>
+    <string name="menu_toggle">Use built in file Explorer</string>
 </resources>

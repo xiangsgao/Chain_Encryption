@@ -10,6 +10,8 @@ import android.provider.DocumentsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -37,6 +39,12 @@ public class MainActivity extends AppCompatActivity {
     private String encryptionMode = ENCRYPTMODE;
     private ImageButton openFile;
     private TextView openFileLabel;
+    private boolean useBuiltInFileExploerer = true;
+
+
+
+
+
 
 
     @Override
@@ -59,6 +67,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.getMenuInflater().inflate(R.menu.menu_main_activity, menu);
+        return true;
+    }
+
     public void convertClicked(View view) {
             this.openFileLabel.setVisibility(View.VISIBLE);
             this.openFile.setVisibility(View.VISIBLE);
@@ -67,7 +81,15 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void browseInputClicked(View view) {
-
+    if(this.useBuiltInFileExploerer){
+        Intent intent = new Intent(MainActivity.this, FileBrowserActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(FileBrowserActivity.START_DIR,"/storage");
+        bundle.putBoolean(FileBrowserActivity.SHOW_HIDDEN, true);
+        bundle.putBoolean(FileBrowserActivity.ONLY_DIRS, false);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, intentCodes.REQUEST_FILE);
+    }else {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         // use intent.setType("image/*"); to choose only image file
         // use this to choose all files
@@ -79,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this.getApplicationContext(), "No file browser found", Toast.LENGTH_SHORT).show();
         }
+    }
 
     }
 
@@ -94,7 +117,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent result) {
-        if(resultCode == RESULT_OK) {
+        if(resultCode != RESULT_OK) {
+            return;
+        }
 
 
 
@@ -104,14 +129,22 @@ public class MainActivity extends AppCompatActivity {
                     if (result == null) {
                         break;
                     }
-                    this.inputPath.setText(pathResolver.getFileName(result.getData(), this));
+                    if(this.useBuiltInFileExploerer){
+                        this.inputPath.setText(result.getStringExtra(FileBrowserActivity.RETURN_PATH));
+                    }else {
+                        this.inputPath.setText(pathResolver.getFileName(result.getData(), this));
+                    }
                     break;
 
                 case intentCodes.REQUEST_DIRECTORY:
                     if (result == null) {
                         break;
                     }
-                    this.outputPath.setText(result.getStringExtra(FileBrowserActivity.CHOSEN_DIRECTORY));
+                    if(this.useBuiltInFileExploerer) {
+                        this.outputPath.setText(result.getStringExtra(FileBrowserActivity.RETURN_PATH));
+                    }else{
+                        this.outputPath.setText(result.getData().getPath());
+                    }
                     break;
             }
 
@@ -121,25 +154,42 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
-        }
     }
 
 
     public void browseOutputClicked(View view) {
         // This chooses the directory only and does not return uri like the Intent.GET_DOCUMENT_TREE but return the full file path if using es file manager
-//        Intent intent = new Intent();
-//        intent.setType(DocumentsContract.Document.MIME_TYPE_DIR);
-//        if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
-//            startActivityForResult(Intent.createChooser(intent, "Choose ES File Explorer to pick directory, download it from playstore if you don't have it installed already"), intentCodes.REQUEST_DIRECTORY);
-//        } else {
-//            Toast.makeText(this.getApplicationContext(), "Please install ES File Manager", Toast.LENGTH_SHORT).show();
-//        }
+        if(this.useBuiltInFileExploerer){
+            Intent intent = new Intent(MainActivity.this, FileBrowserActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(FileBrowserActivity.START_DIR,"/storage");
+            bundle.putBoolean(FileBrowserActivity.SHOW_HIDDEN, true);
+            bundle.putBoolean(FileBrowserActivity.ONLY_DIRS, true);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, intentCodes.REQUEST_DIRECTORY);
+        }else {
+            Intent intent = new Intent();
+            intent.setType(DocumentsContract.Document.MIME_TYPE_DIR);
+            if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
+                startActivityForResult(Intent.createChooser(intent, "Choose ES File Explorer to pick directory, download it from playstore if you don't have it installed already"), intentCodes.REQUEST_DIRECTORY);
+            } else {
+                Toast.makeText(this.getApplicationContext(), "Please install ES File Manager", Toast.LENGTH_SHORT).show();
+            }
+        }
 
-        Intent intent = new Intent(MainActivity.this, FileBrowserActivity.class);
-        startActivityForResult(intent,intentCodes.REQUEST_DIRECTORY);
 
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menuToggle:
+                this.useBuiltInFileExploerer = !item.isChecked();
+                item.setChecked(!item.isChecked());
+                return true;
+                default:return false;
+        }
 
     }
 

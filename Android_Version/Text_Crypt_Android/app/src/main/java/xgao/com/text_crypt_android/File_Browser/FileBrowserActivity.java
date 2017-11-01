@@ -59,7 +59,7 @@ public class FileBrowserActivity extends ListActivity {
     public static final String START_DIR = "startDir";
     public static final String ONLY_DIRS = "onlyDirs";
     public static final String SHOW_HIDDEN = "showHidden";
-    public static final String CHOSEN_DIRECTORY = "chosenDir";
+    public static final String RETURN_PATH = "returnPath";
     private static final int  MY_PERMISSIONS_REQUEST_READ_AND_WRITE_SDK = 1555454;
     private File dir;
     private boolean showHidden = false;
@@ -94,15 +94,15 @@ public class FileBrowserActivity extends ListActivity {
         setTitle(dir.getAbsolutePath());
         Button btnChoose = (Button) findViewById(R.id.btnChoose);
         String name = dir.getName();
-        if(name.equals("0")) {
-            btnChoose.setText("Select " + "'/" + name + "'");
-        }
+        btnChoose.setText("Select " + "'/" + name + "'");
         btnChoose.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 returnDir(dir.getAbsolutePath());
             }
         });
-
+        if(!onlyDirs){
+            btnChoose.setVisibility(View.GONE);
+        }
         ListView lv = getListView();
         lv.setTextFilterEnabled(true);
 
@@ -121,14 +121,20 @@ public class FileBrowserActivity extends ListActivity {
 
         lv.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(!files.get(position).isDirectory())
+                // This returns the file path
+                if(!files.get(position).isDirectory()) {
+                    returnDir(files.get(position).getAbsolutePath());
                     return;
+                }
                 String path = files.get(position).getAbsolutePath();
                 Intent intent = new Intent(FileBrowserActivity.this, FileBrowserActivity.class);
                 intent.putExtra(FileBrowserActivity.START_DIR, path);
                 intent.putExtra(FileBrowserActivity.SHOW_HIDDEN, showHidden);
                 intent.putExtra(FileBrowserActivity.ONLY_DIRS, onlyDirs);
                 startActivityForResult(intent, intentCodes.REQUEST_DIRECTORY);
+
+
+
             }
         });
     }
@@ -146,7 +152,12 @@ public class FileBrowserActivity extends ListActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == intentCodes.REQUEST_DIRECTORY && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
-            String path = (String) extras.get(FileBrowserActivity.CHOSEN_DIRECTORY);
+            String path = (String) extras.get(FileBrowserActivity.RETURN_PATH);
+            returnDir(path);
+        }
+        if(requestCode == intentCodes.REQUEST_FILE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            String path = (String) extras.get(FileBrowserActivity.RETURN_PATH);
             returnDir(path);
         }
     }
@@ -161,6 +172,7 @@ public class FileBrowserActivity extends ListActivity {
         }
         return names;
     }
+
 
 
 
@@ -206,7 +218,7 @@ public class FileBrowserActivity extends ListActivity {
 
     private void returnDir(String path) {
         Intent result = new Intent();
-        result.putExtra(CHOSEN_DIRECTORY, path);
+        result.putExtra(RETURN_PATH, path);
         setResult(RESULT_OK, result);
         finish();
     }
