@@ -139,8 +139,8 @@ public class FileBrowserActivity extends ListActivity {
 
         final ArrayList<File> files = filter(dir.listFiles(), onlyDirs, showHidden);
         String[] names = names(files);
-        setListAdapter(new fileExploererAdaptor(this, files, names));
-
+         setListAdapter(new fileExploererAdaptor(this, files, names));
+        //  setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item,names));
         lv.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // This returns the file path

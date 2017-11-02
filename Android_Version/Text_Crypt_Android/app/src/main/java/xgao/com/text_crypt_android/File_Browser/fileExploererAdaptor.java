@@ -3,14 +3,21 @@ package xgao.com.text_crypt_android.File_Browser;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.io.File;
+
 import java.util.ArrayList;
+
+
+
+import java.io.File;
+
 
 import xgao.com.text_crypt_android.R;
 
@@ -23,7 +30,7 @@ public class fileExploererAdaptor extends ArrayAdapter<String> {
 
     private LayoutInflater mInflator;
     private ArrayList<File> file;
-
+    RecyclerView.ViewHolder holder = null;
     public fileExploererAdaptor(@NonNull Context context, @NonNull ArrayList<File> file, @NonNull String[] objects) {
         super(context, 0, objects);
         mInflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -32,25 +39,35 @@ public class fileExploererAdaptor extends ArrayAdapter<String> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         int type = this.getItemViewType(position);
-        if(convertView == null){
-            switch(type){
+        // view holder inner class is extreamly important, without it and the following code, position are jumble up
+        ViewHolder holder = null;
+        if(convertView == null) {
+            switch (type) {
                 case 0:
-                    convertView = mInflator.inflate(R.layout.list_item,parent,false);
-                    ((TextView)convertView.findViewById(R.id.folderView)).setText(this.getItem(position));
+                    holder = new ViewHolder();
+                    convertView = mInflator.inflate(R.layout.list_item, parent, false);
+                    holder.textView = (TextView)convertView.findViewById(R.id.folderView);
                     break;
 
                 case 1:
-                    convertView = mInflator.inflate(R.layout.list_file_item, parent,false);
-                    ((TextView)convertView.findViewById(R.id.fileView)).setText(this.getItem(position));
+                    holder = new ViewHolder();
+                    convertView = mInflator.inflate(R.layout.list_file_item, parent, false);
+                    holder.textView = (TextView) convertView.findViewById(R.id.fileView);
                     break;
 
             }
-        }
+            convertView.setTag(holder);
+    }
+        else {
+        holder = (ViewHolder)convertView.getTag();
+    }
+    holder.textView.setText(this.getItem(position));
         return convertView;
 
     }
+
 
     @Override
     public int getViewTypeCount() {
@@ -64,5 +81,9 @@ public class fileExploererAdaptor extends ArrayAdapter<String> {
         } else {
             return 1;
         }
+    }
+
+    private class ViewHolder {
+        public TextView textView;
     }
 }
