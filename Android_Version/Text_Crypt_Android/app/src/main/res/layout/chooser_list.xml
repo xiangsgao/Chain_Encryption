@@ -3,14 +3,24 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    >
+	android:background="@color/black">
+	<TextView
+		android:id="@+id/currentDirectory"
+		android:layout_width="match_parent"
+		android:layout_height="60dp"
+		android:textColor="#000000"
+		android:background="#FF33B5E5 "
+		android:textSize="20dp"/>
    <ListView android:id="@android:id/list"
    		android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+	   android:layout_marginTop="5dp"
+	   android:footerDividersEnabled="true" />
    <Button android:text="Choose"
    		android:id="@+id/btnChoose"
    		android:layout_width="fill_parent"
-   		android:layout_height="wrap_content"/>
+   		android:layout_height="wrap_content"
+	   />
 
 </LinearLayout>

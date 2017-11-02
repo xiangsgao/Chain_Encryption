@@ -15,12 +15,15 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -49,7 +52,7 @@ import xgao.com.text_crypt_android.logic.intentCodes;
  THE SOFTWARE.
  /////////////////////////////////////////////////////////////////////////////////////
 
- Requesting for permission method is my own work. I added it to ensure compatibly with Android Marshmallow and up
+ I modified much of the original codes to get it up to date with the latest android operating system. The orginal code is from the year 2011
 
  Created by GAO November 1st, 2017
 
@@ -60,10 +63,12 @@ public class FileBrowserActivity extends ListActivity {
     public static final String ONLY_DIRS = "onlyDirs";
     public static final String SHOW_HIDDEN = "showHidden";
     public static final String RETURN_PATH = "returnPath";
+    public static final String BROWSER_MODE = "browserMode";
     private static final int  MY_PERMISSIONS_REQUEST_READ_AND_WRITE_SDK = 1555454;
     private File dir;
     private boolean showHidden = false;
     private boolean onlyDirs = true ;
+    private int operationMode = intentCodes.REQUEST_FILE_BROWSER;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +77,7 @@ public class FileBrowserActivity extends ListActivity {
         Bundle extras = getIntent().getExtras();
         dir = Environment.getExternalStorageDirectory();
         if (extras != null) {
+            this.operationMode = extras.getInt(BROWSER_MODE, intentCodes.REQUEST_FILE_BROWSER);
             String preferredStartDir = extras.getString(START_DIR);
             showHidden = extras.getBoolean(SHOW_HIDDEN, false);
             onlyDirs = extras.getBoolean(ONLY_DIRS, true);
@@ -83,10 +89,11 @@ public class FileBrowserActivity extends ListActivity {
             }
         }
        this.persmissionChecking();
-
+        ((TextView) this.findViewById(R.id.currentDirectory)).setText(dir.getAbsolutePath());
 
 
     }
+
 
 
     private void restOfSetUp(){
@@ -94,15 +101,30 @@ public class FileBrowserActivity extends ListActivity {
         setTitle(dir.getAbsolutePath());
         Button btnChoose = (Button) findViewById(R.id.btnChoose);
         String name = dir.getName();
-        btnChoose.setText("Select " + "'/" + name + "'");
-        btnChoose.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                returnDir(dir.getAbsolutePath());
-            }
-        });
-        if(!onlyDirs){
+        if(this.operationMode == intentCodes.REQUEST_FILE){
             btnChoose.setVisibility(View.GONE);
         }
+
+       else if(this.operationMode == intentCodes.REQUEST_DIRECTORY){
+            btnChoose.setText("Select " + "'/" + name + "'");
+            btnChoose.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    returnPath(dir.getAbsolutePath());
+                }
+            });
+        }
+
+        else if (this.operationMode == intentCodes.REQUEST_FILE_BROWSER){
+            btnChoose.setText("Close Browser");
+            btnChoose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    simplyClose();
+                }
+            });
+        }
+
+
         ListView lv = getListView();
         lv.setTextFilterEnabled(true);
 
@@ -117,20 +139,31 @@ public class FileBrowserActivity extends ListActivity {
 
         final ArrayList<File> files = filter(dir.listFiles(), onlyDirs, showHidden);
         String[] names = names(files);
-        setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item, names));
+        setListAdapter(new fileExploererAdaptor(this, files, names));
 
         lv.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // This returns the file path
-                if(!files.get(position).isDirectory()) {
-                    returnDir(files.get(position).getAbsolutePath());
+                if(!files.get(position).isDirectory() && FileBrowserActivity.this.operationMode == intentCodes.REQUEST_FILE) {
+                    returnPath(files.get(position).getAbsolutePath());
+                    return;
+                }
+                else if (!files.get(position).isDirectory() && FileBrowserActivity.this.operationMode == intentCodes.REQUEST_FILE_BROWSER){
+                    simplyClose();
+                    return;
+                }
+                else if(!files.get(position).isDirectory() && FileBrowserActivity.this.operationMode == intentCodes.REQUEST_DIRECTORY){
                     return;
                 }
                 String path = files.get(position).getAbsolutePath();
+                if(path.endsWith("emulated")){
+                    path += "/0";
+                }
                 Intent intent = new Intent(FileBrowserActivity.this, FileBrowserActivity.class);
                 intent.putExtra(FileBrowserActivity.START_DIR, path);
                 intent.putExtra(FileBrowserActivity.SHOW_HIDDEN, showHidden);
                 intent.putExtra(FileBrowserActivity.ONLY_DIRS, onlyDirs);
+                intent.putExtra(FileBrowserActivity.BROWSER_MODE, operationMode);
                 startActivityForResult(intent, intentCodes.REQUEST_DIRECTORY);
 
 
@@ -150,16 +183,12 @@ public class FileBrowserActivity extends ListActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == intentCodes.REQUEST_DIRECTORY && resultCode == RESULT_OK) {
+        if((requestCode == intentCodes.REQUEST_DIRECTORY|| requestCode == intentCodes.REQUEST_FILE) && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             String path = (String) extras.get(FileBrowserActivity.RETURN_PATH);
-            returnDir(path);
+            returnPath(path);
         }
-        if(requestCode == intentCodes.REQUEST_FILE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            String path = (String) extras.get(FileBrowserActivity.RETURN_PATH);
-            returnDir(path);
-        }
+
     }
 
 
@@ -216,14 +245,18 @@ public class FileBrowserActivity extends ListActivity {
 
 
 
-    private void returnDir(String path) {
+    private void returnPath(String path) {
         Intent result = new Intent();
         result.putExtra(RETURN_PATH, path);
         setResult(RESULT_OK, result);
         finish();
     }
 
-
+    private void simplyClose(){
+        Intent result = new Intent();
+        setResult(RESULT_OK, result);
+        finish();
+    }
 
 
 

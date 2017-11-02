@@ -8,5 +8,6 @@ public class intentCodes {
 
     public static final int REQUEST_FILE = 2458;
     public static final int REQUEST_DIRECTORY = 1335;
+    public static final int REQUEST_FILE_BROWSER = 16517;
 
 }

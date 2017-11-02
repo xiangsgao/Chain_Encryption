@@ -3,9 +3,7 @@ package xgao.com.text_crypt_android;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.HideReturnsTransformationMethod;
@@ -18,11 +16,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import xgao.com.text_crypt_android.File_Browser.FileBrowserActivity;
-import xgao.com.text_crypt_android.File_Browser.pathResolver;
-import java.io.File;
-
+import xgao.com.text_crypt_android.File_Browser.fileBrowserHelper;
 import xgao.com.text_crypt_android.logic.intentCodes;
 import xgao.com.text_crypt_android.logic.model;
 
@@ -84,7 +79,8 @@ public class MainActivity extends AppCompatActivity {
     if(this.useBuiltInFileExploerer){
         Intent intent = new Intent(MainActivity.this, FileBrowserActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString(FileBrowserActivity.START_DIR,"/storage");
+        bundle.putInt(FileBrowserActivity.BROWSER_MODE, intentCodes.REQUEST_FILE);
+        bundle.putString(FileBrowserActivity.START_DIR,"/storage/");
         bundle.putBoolean(FileBrowserActivity.SHOW_HIDDEN, true);
         bundle.putBoolean(FileBrowserActivity.ONLY_DIRS, false);
         intent.putExtras(bundle);
@@ -109,10 +105,20 @@ public class MainActivity extends AppCompatActivity {
         // This lets an app to browse the file but doesn't return the file uri. The opening folder is defined by Uri
         // Environment will return the path to the default home directory
         // Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory().getPath());
-        Uri selectedUri = Uri.fromFile(new File(String.valueOf(this.outputPath.getText())));
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(selectedUri,  "*/*");
-        startActivity(intent);
+        if(this.useBuiltInFileExploerer){
+            Intent intent = new Intent(MainActivity.this,FileBrowserActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt(FileBrowserActivity.BROWSER_MODE, intentCodes.REQUEST_FILE_BROWSER);
+            bundle.putString(FileBrowserActivity.START_DIR,this.outputPath.getText().toString());
+            bundle.putBoolean(FileBrowserActivity.SHOW_HIDDEN, true);
+            bundle.putBoolean(FileBrowserActivity.ONLY_DIRS, false);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, intentCodes.REQUEST_FILE_BROWSER);
+        }else {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(fileBrowserHelper.returnUri(this.outputPath.getText().toString()), "*/*");
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -120,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
         if(resultCode != RESULT_OK) {
             return;
         }
+
 
 
 
@@ -132,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                     if(this.useBuiltInFileExploerer){
                         this.inputPath.setText(result.getStringExtra(FileBrowserActivity.RETURN_PATH));
                     }else {
-                        this.inputPath.setText(pathResolver.getFileName(result.getData(), this));
+                        this.inputPath.setText(fileBrowserHelper.getFileName(result.getData(), this));
                     }
                     break;
 
@@ -146,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
                         this.outputPath.setText(result.getData().getPath());
                     }
                     break;
+
             }
 
 
@@ -162,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
         if(this.useBuiltInFileExploerer){
             Intent intent = new Intent(MainActivity.this, FileBrowserActivity.class);
             Bundle bundle = new Bundle();
+            bundle.putInt(FileBrowserActivity.BROWSER_MODE, intentCodes.REQUEST_DIRECTORY);
             bundle.putString(FileBrowserActivity.START_DIR,"/storage");
             bundle.putBoolean(FileBrowserActivity.SHOW_HIDDEN, true);
             bundle.putBoolean(FileBrowserActivity.ONLY_DIRS, true);
@@ -198,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
         this.passWordConfirmed.setVisibility(View.VISIBLE);
     }
 
-    public void onDecrytptSelect(View view) {
+    public void onDecryptSelected(View view) {
         this.encryptionMode = DECRYPTMODE;
         this.passWordConfirmed.setVisibility(View.GONE);
     }
