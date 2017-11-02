@@ -14,10 +14,10 @@ import java.io.File;
 public class model implements Parcelable{
 
 
-    private File input;
+    private File input = null;
     private boolean encryptMode = true;
-    private String outputPath;
-    private String key;
+    private String outputPath = "";
+    private String key = "";
 
 
 

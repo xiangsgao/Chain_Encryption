@@ -15,12 +15,9 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -164,7 +161,7 @@ public class FileBrowserActivity extends ListActivity {
                 intent.putExtra(FileBrowserActivity.SHOW_HIDDEN, showHidden);
                 intent.putExtra(FileBrowserActivity.ONLY_DIRS, onlyDirs);
                 intent.putExtra(FileBrowserActivity.BROWSER_MODE, operationMode);
-                startActivityForResult(intent, intentCodes.REQUEST_DIRECTORY);
+                startActivityForResult(intent, operationMode);
 
 
 
@@ -187,6 +184,10 @@ public class FileBrowserActivity extends ListActivity {
             Bundle extras = data.getExtras();
             String path = (String) extras.get(FileBrowserActivity.RETURN_PATH);
             returnPath(path);
+        }
+
+        if(requestCode == intentCodes.REQUEST_FILE_BROWSER){
+            this.simplyClose();
         }
 
     }

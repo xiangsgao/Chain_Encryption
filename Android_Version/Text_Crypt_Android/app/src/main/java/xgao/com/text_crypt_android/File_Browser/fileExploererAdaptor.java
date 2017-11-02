@@ -48,13 +48,13 @@ public class fileExploererAdaptor extends ArrayAdapter<String> {
                 case 0:
                     holder = new ViewHolder();
                     convertView = mInflator.inflate(R.layout.list_item, parent, false);
-                    holder.textView = (TextView)convertView.findViewById(R.id.folderView);
+                    holder.textView = convertView.findViewById(R.id.folderView);
                     break;
 
                 case 1:
                     holder = new ViewHolder();
                     convertView = mInflator.inflate(R.layout.list_file_item, parent, false);
-                    holder.textView = (TextView) convertView.findViewById(R.id.fileView);
+                    holder.textView = convertView.findViewById(R.id.fileView);
                     break;
 
             }
