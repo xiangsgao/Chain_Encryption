@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -227,7 +229,7 @@ public class FileBrowserActivity extends ListActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                         this.restOfSetUp();
                 }else{
-                    Toast.makeText(this, "You need to give permission bud", Toast.LENGTH_LONG);
+                    this.displayAlert("You gotta give me access to your files bud");
                 }
                 break;
         }
@@ -260,6 +262,19 @@ public class FileBrowserActivity extends ListActivity {
     }
 
 
+
+    private void displayAlert(String alertMessage){
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("Alert");
+        alertDialog.setMessage(alertMessage);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
 
 
 

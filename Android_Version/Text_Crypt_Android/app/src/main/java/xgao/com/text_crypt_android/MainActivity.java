@@ -3,7 +3,9 @@ package xgao.com.text_crypt_android;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.HideReturnsTransformationMethod;
@@ -55,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
         openFile = (ImageButton) this.findViewById(R.id.openFile);
         openFileLabel = (TextView) findViewById(R.id.openFileLabel);
         openFileLabel.setVisibility(View.GONE);
-        openFile.setEnabled(false);
-        openFile.setVisibility(View.GONE);
         model = new model();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
@@ -69,9 +69,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void convertClicked(View view) {
-            this.openFileLabel.setVisibility(View.VISIBLE);
-            this.openFile.setVisibility(View.VISIBLE);
-            this.openFile.setEnabled(true);
+         Toast.makeText(this,"Not supported yet", Toast.LENGTH_LONG);
     }
 
 
@@ -104,19 +102,27 @@ public class MainActivity extends AppCompatActivity {
     public void openFileClicked(View view){
         // This lets an app to browse the file but doesn't return the file uri. The opening folder is defined by Uri
         // Environment will return the path to the default home directory
-        // Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory().getPath());
         if(this.useBuiltInFileExploerer){
             Intent intent = new Intent(MainActivity.this,FileBrowserActivity.class);
             Bundle bundle = new Bundle();
             bundle.putInt(FileBrowserActivity.BROWSER_MODE, intentCodes.REQUEST_FILE_BROWSER);
-            bundle.putString(FileBrowserActivity.START_DIR,this.outputPath.getText().toString());
+            if(fileBrowserHelper.checkPathValid(this.outputPath.getText().toString())) {
+                bundle.putString(FileBrowserActivity.START_DIR, this.outputPath.getText().toString());
+            }
+            else{
+                bundle.putString(FileBrowserActivity.START_DIR, "/storage");
+            }
             bundle.putBoolean(FileBrowserActivity.SHOW_HIDDEN, true);
             bundle.putBoolean(FileBrowserActivity.ONLY_DIRS, false);
             intent.putExtras(bundle);
             startActivityForResult(intent, intentCodes.REQUEST_FILE_BROWSER);
         }else {
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(fileBrowserHelper.returnUri(this.outputPath.getText().toString()), "*/*");
+            if(fileBrowserHelper.checkPathValid(this.outputPath.getText().toString())){
+                intent.setDataAndType(Uri.parse(this.outputPath.getText().toString()), "*/*");
+            }else {
+                intent.setDataAndType(Uri.parse(Environment.getExternalStorageDirectory().getPath()), "*/*");
+            }
             startActivity(intent);
         }
     }

@@ -24,6 +24,11 @@ public class fileBrowserHelper {
 
     }
 
+    public static boolean checkPathValid(String path){
+        return new File(path).exists();
+    }
+
+
     public static Uri returnUri(String path){
       return  Uri.fromFile(new File(String.valueOf(path)));
     }
