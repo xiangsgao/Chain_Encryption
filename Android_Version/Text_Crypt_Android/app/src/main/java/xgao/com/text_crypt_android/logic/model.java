@@ -1,9 +1,6 @@
 package xgao.com.text_crypt_android.logic;
 
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.io.File;
 
 
@@ -11,55 +8,61 @@ import java.io.File;
  * Created by xgao on 10/21/17.
  */
 
-public class model implements Parcelable{
+public class model {
 
+    public static final String ALL_GOOD = "Everything is good";
 
-    private File input = null;
+    private File inputFile;
+    private boolean uriInput = false;
     private boolean encryptMode = true;
-    private String outputPath = "";
+    private File outputFile;
     private String key = "";
-
-
+    private String encryptionMode;
 
     public model() {
     }
 
-
-
-    public void setInputFile(String input){
-        this.input = new File(input);
+    public void convert() throws cryptoException{
+            throw new cryptoException("Successes");
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public void setOutputPath(File outputFile){
+        this.outputFile = outputFile;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeSerializable(this.input);
-        dest.writeByte(this.encryptMode ? (byte) 1 : (byte) 0);
-        dest.writeString(this.outputPath);
-        dest.writeString(this.key);
+    public void setKey(String key){
+        this.key = key;
     }
 
 
-    protected model(Parcel in) {
-        this.input = (File) in.readSerializable();
-        this.encryptMode = in.readByte() != 0;
-        this.outputPath = in.readString();
-        this.key = in.readString();
+    public void setInputFile(File input) {
+        this.inputFile = input;
     }
 
-    public static final Creator<model> CREATOR = new Creator<model>() {
-        @Override
-        public model createFromParcel(Parcel source) {
-            return new model(source);
+    public void setEncryptionMode(String encryptionMode){
+        this.encryptionMode = encryptionMode;
+    }
+
+    public String isEeverythingValid(){
+        if(inputFile == null || outputFile == null) {
+            return "Please select both an input file and an output destination";
         }
 
-        @Override
-        public model[] newArray(int size) {
-            return new model[size];
+        if (!inputFile.exists() && !uriInput){
+            return "Input file path is invalid or it no longer exists";
         }
-    };
+
+        if (!outputFile.exists()){
+            return "Output directory is invalid or it no longer exists";
+        }
+
+
+        return ALL_GOOD;
+    }
+
+    public void setUriInput(boolean uriInput){
+        this.uriInput = uriInput;
+    }
+
+
 }

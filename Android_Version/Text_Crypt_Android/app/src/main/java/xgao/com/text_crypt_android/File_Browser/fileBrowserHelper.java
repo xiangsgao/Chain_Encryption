@@ -4,9 +4,14 @@ package xgao.com.text_crypt_android.File_Browser;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.OpenableColumns;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 
 public class fileBrowserHelper {
@@ -29,13 +34,23 @@ public class fileBrowserHelper {
     }
 
 
-    public static Uri returnUri(String path){
-      return  Uri.fromFile(new File(String.valueOf(path)));
+
+    public static File AndroidUriToTempFile(Uri uri, Context context)throws IOException{
+        File result = new File(Environment.getExternalStorageDirectory().getPath()+"/TextCryptTemFile");
+        if(result.exists()){
+            result.delete();
+        }
+        InputStream in = context.getContentResolver().openInputStream(uri);
+
+        OutputStream out = new FileOutputStream(result);
+        byte buf[]=new byte[1024];
+        int len;
+        while((len=in.read(buf))>0)
+            out.write(buf,0,len);
+        out.close();
+        in.close();
+        return result;
     }
-
-
-
-
 
 
 

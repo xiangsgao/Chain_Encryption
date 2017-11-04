@@ -17,6 +17,7 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -148,11 +149,10 @@ public class FileBrowserActivity extends ListActivity {
                     return;
                 }
                 else if (!files.get(position).isDirectory() && FileBrowserActivity.this.operationMode == intentCodes.REQUEST_FILE_BROWSER){
-                    simplyClose();
                     return;
                 }
                 else if(!files.get(position).isDirectory() && FileBrowserActivity.this.operationMode == intentCodes.REQUEST_DIRECTORY){
-                    return;
+                     returnPath(files.get(position).getAbsolutePath());
                 }
                 String path = files.get(position).getAbsolutePath();
                 if(path.endsWith("emulated")){

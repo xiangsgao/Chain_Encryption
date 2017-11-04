@@ -193,6 +193,16 @@
         android:onClick="convertClicked"
         android:text="@string/convert_button" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:text="File Browser"
+        android:layout_below="@id/openFile"
+        android:layout_centerHorizontal="true"/>
+
 
 
 </RelativeLayout>

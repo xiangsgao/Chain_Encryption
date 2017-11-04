@@ -1,6 +1,8 @@
 package xgao.com.text_crypt_android;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
@@ -18,10 +20,18 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.IOException;
+
 import xgao.com.text_crypt_android.File_Browser.FileBrowserActivity;
-import xgao.com.text_crypt_android.File_Browser.fileBrowserHelper;
+import xgao.com.text_crypt_android.logic.cryptoException;
 import xgao.com.text_crypt_android.logic.intentCodes;
 import xgao.com.text_crypt_android.logic.model;
+
+import static xgao.com.text_crypt_android.File_Browser.fileBrowserHelper.AndroidUriToTempFile;
+import static xgao.com.text_crypt_android.File_Browser.fileBrowserHelper.checkPathValid;
+import static xgao.com.text_crypt_android.File_Browser.fileBrowserHelper.getFileName;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton openFile;
     private TextView openFileLabel;
     private boolean useBuiltInFileExploerer = true;
+    private Uri pathUri = null;
 
 
 
@@ -68,8 +79,42 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void convertClicked(View view) {
-         Toast.makeText(this,"Not supported yet", Toast.LENGTH_LONG);
+    public void convertClicked(View view) throws IOException {
+        File tempFile = null;
+        if(this.password.getText().toString().equals("")){
+            this.displayAlert("Password can not be empty, use at least 8 characters if you are serious about security");
+            return;
+        }
+         if(encryptionMode.equals(ENCRYPTMODE)&&!password.equals(passWordConfirmed)){
+             this.displayAlert("Your passwords do not match" );
+             return;
+         }
+
+         model.setKey(this.password.toString());
+         model.setOutputPath(new File(this.outputPath.getText().toString()));
+         if (this.pathUri != null){
+             model.setUriInput(true);
+             tempFile = AndroidUriToTempFile(this.pathUri,this);
+             model.setInputFile(tempFile);
+         }else{
+             model.setInputFile(new File(this.inputPath.getText().toString()));
+         }
+         String validity = model.isEeverythingValid();
+
+         if(!validity.equals(model.ALL_GOOD)){
+             displayAlert(validity);
+             return;
+         }
+
+         try{
+             model.convert();
+             this.displayAlert("Success! Tap on File Browser to open the destination file directory");
+         }catch (cryptoException e){
+             this.displayAlert(e.getMessage());
+         }
+        if (tempFile!=null){
+             tempFile.delete();
+        }
     }
 
 
@@ -106,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this,FileBrowserActivity.class);
             Bundle bundle = new Bundle();
             bundle.putInt(FileBrowserActivity.BROWSER_MODE, intentCodes.REQUEST_FILE_BROWSER);
-            if(fileBrowserHelper.checkPathValid(this.outputPath.getText().toString())) {
+            if(checkPathValid(this.outputPath.getText().toString())) {
                 bundle.putString(FileBrowserActivity.START_DIR, this.outputPath.getText().toString());
             }
             else{
@@ -118,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, intentCodes.REQUEST_FILE_BROWSER);
         }else {
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            if(fileBrowserHelper.checkPathValid(this.outputPath.getText().toString())){
+            if(checkPathValid(this.outputPath.getText().toString())){
                 intent.setDataAndType(Uri.parse(this.outputPath.getText().toString()), "*/*");
             }else {
                 intent.setDataAndType(Uri.parse(Environment.getExternalStorageDirectory().getPath()), "*/*");
@@ -143,9 +188,11 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
                     if(this.useBuiltInFileExploerer){
+                        this.pathUri = null;
                         this.inputPath.setText(result.getStringExtra(FileBrowserActivity.RETURN_PATH));
                     }else {
-                        this.inputPath.setText(fileBrowserHelper.getFileName(result.getData(), this));
+                        this.inputPath.setText(getFileName(result.getData(), this));
+                       pathUri = result.getData();
                     }
                     break;
 
@@ -229,6 +276,19 @@ public class MainActivity extends AppCompatActivity {
             this.password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
             this.passWordConfirmed.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
         }
+    }
+
+    private void displayAlert(String alertMessage){
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("Alert");
+        alertDialog.setMessage(alertMessage);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
     }
 
 }
