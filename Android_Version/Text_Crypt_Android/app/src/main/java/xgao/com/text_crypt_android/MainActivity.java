@@ -3,8 +3,10 @@ package xgao.com.text_crypt_android;
 
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,8 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import java.io.File;
@@ -43,16 +44,43 @@ public class MainActivity extends AppCompatActivity {
     private EditText inputPath;
     private EditText outputPath;
     private EditText password;
-    private EditText passWordConfirmed;
-    private String encryptionMode = ENCRYPT_MODE;
-    private ImageButton openFile;
-    private TextView openFileLabel;
+    private String encryptionMode;
     private boolean useBuiltInFileExplorer = true;
-    private Uri pathUri = null;
+    private Uri pathUri;
 
 
 
 
+
+    private void savePerferences (){
+        SharedPreferences save = getSharedPreferences("entry_data", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = save.edit();
+        editor.putString("inputPath", this.inputPath.getText().toString());
+        editor.putString("outputPath", this.outputPath.getText().toString());
+        editor.putString("encryptionMode", encryptionMode);
+        editor.putBoolean("useBuiltInFileExplorer", useBuiltInFileExplorer);
+        if(pathUri!=null) {
+            editor.putString("pathUri", pathUri.toString());
+        }
+        editor.commit();
+    }
+
+    private void restorePerferences(){
+        SharedPreferences restore = getSharedPreferences("entry_data", Context.MODE_PRIVATE);
+        inputPath.setText(restore.getString("inputPath", ""));
+        outputPath.setText(restore.getString("outputPath", ""));
+        encryptionMode = restore.getString("encryptionMode", ENCRYPT_MODE);
+        useBuiltInFileExplorer = restore.getBoolean("useBuiltInFileExplorer", true);
+        if(encryptionMode.equals(DECRYPT_MODE)){
+            ((RadioButton) findViewById(R.id.decryptRadio)).setChecked(true);
+        }else{
+            ((RadioButton) findViewById(R.id.encryptRadio)).setChecked(true);
+        }
+            pathUri = Uri.parse(restore.getString("pathUri", ""));
+        if(pathUri.toString().equals("")){
+            pathUri = null;
+        }
+    }
 
 
 
@@ -61,36 +89,35 @@ public class MainActivity extends AppCompatActivity {
         //text button color tint, accent, background, ect can all be changed at once in the styles.xml
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        inputPath = (EditText) this.findViewById(R.id.inputPath);
+        inputPath = this.findViewById(R.id.inputPath);
         this.inputPath.setFocusable(false);
-        outputPath = (EditText) this.findViewById(R.id.outPutPath);
-        password = (EditText) this.findViewById(R.id.passWordInput);
-        passWordConfirmed = (EditText) this.findViewById(R.id.passwordConfirmed);
-        openFile = (ImageButton) this.findViewById(R.id.openFile);
-        openFileLabel = (TextView) findViewById(R.id.openFileLabel);
-        openFileLabel.setVisibility(View.GONE);
+        outputPath = this.findViewById(R.id.outPutPath);
+        password =  this.findViewById(R.id.passWordInput);
         model = new model();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        restorePerferences();
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.getMenuInflater().inflate(R.menu.menu_main_activity, menu);
+        menu.getItem(0).setChecked(useBuiltInFileExplorer);
         return true;
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        this.savePerferences();
+    }
+
     public void convertClicked(View view) throws IOException {
-        File tempFile = null;
-        if(this.password.getText().toString().equals("")){
-            this.displayAlert("Password can not be empty, use at least 8 characters if you are serious about security");
-            return;
-        }
-         if(encryptionMode.equals(ENCRYPT_MODE)&&!password.equals(passWordConfirmed)){
-             this.displayAlert("Your passwords do not match" );
+         File tempFile = null;
+         if(this.password.getText().toString().equals("")){
+             this.displayAlert("Password can not be empty, your key should have at least 8 characters or more if you are serious about security");
              return;
          }
-
          model.setKey(this.password.toString());
          model.setOutputPath(new File(this.outputPath.getText().toString()));
          if (this.pathUri != null){
@@ -258,12 +285,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void onEncryptSelected(View view) {
         this.encryptionMode = ENCRYPT_MODE;
-        this.passWordConfirmed.setVisibility(View.VISIBLE);
     }
 
     public void onDecryptSelected(View view) {
         this.encryptionMode = DECRYPT_MODE;
-        this.passWordConfirmed.setVisibility(View.GONE);
     }
 
     public void passwordCheckChanged(View view) {
@@ -272,10 +297,8 @@ public class MainActivity extends AppCompatActivity {
         // need to invert the logic because button onclick is process first before changing the check status
         if (!checkbox.isChecked()) {
             this.password.setTransformationMethod(PasswordTransformationMethod.getInstance());
-            this.passWordConfirmed.setTransformationMethod(PasswordTransformationMethod.getInstance());
         } else {
             this.password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-            this.passWordConfirmed.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
         }
     }
 
