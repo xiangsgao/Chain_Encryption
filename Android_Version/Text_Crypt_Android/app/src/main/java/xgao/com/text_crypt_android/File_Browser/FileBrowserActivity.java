@@ -15,8 +15,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -143,12 +147,35 @@ public class FileBrowserActivity extends ListActivity {
         }
 
         final ArrayList<File> files = filter(dir.listFiles(), onlyDirs, showHidden);
-        String[] names = names(files);
+        ArrayList<String> names = names(files);
          setListAdapter(new fileExploererAdaptor(this, files, names));
         //  setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item,names));
-        lv.setOnItemClickListener(new customHandler(files, fileBrowserButton));
+        lv.setOnItemClickListener(new customHandler(files));
+
+        // This will bring up menu when long pressed on a list view item. Actions are overridden underneath
+        this.registerForContextMenu(lv);
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.item_select_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        // this actually gets the position of the list view item
+         int position = info.position;
+        switch(item.getItemId()) {
+            case R.id.delete:
+                this.confirmedDeletion(position);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -163,11 +190,11 @@ public class FileBrowserActivity extends ListActivity {
     }
 
 
-    public String[] names(ArrayList<File> files) {
-        String[] names = new String[files.size()];
+    public ArrayList<String> names(ArrayList<File> files) {
+       ArrayList<String> names = new ArrayList();
         int i = 0;
         for(File file: files) {
-            names[i] = file.getName();
+            names.add(file.getName());
             i++;
         }
         return names;
@@ -240,17 +267,35 @@ public class FileBrowserActivity extends ListActivity {
         alertDialog.show();
     }
 
+    public void confirmedDeletion(final int position){
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        ((fileExploererAdaptor) FileBrowserActivity.this.getListAdapter()).delete(position);
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
+    }
+
 
 
 
 
 
     private class customHandler implements AdapterView.OnItemClickListener{
-        private  ArrayList<File> files;
-        private Button fileBrowserButton;
-        public customHandler( ArrayList<File> files, Button fileBrowserButton){
+
+        private ArrayList<File> files;
+
+        public customHandler(ArrayList<File> files){
             this.files = files;
-            this.fileBrowserButton = fileBrowserButton;
         }
 
 

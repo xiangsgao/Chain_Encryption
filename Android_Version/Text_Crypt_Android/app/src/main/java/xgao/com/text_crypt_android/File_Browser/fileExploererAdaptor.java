@@ -31,7 +31,7 @@ public class fileExploererAdaptor extends ArrayAdapter<String> {
     private LayoutInflater mInflator;
     private ArrayList<File> file;
     RecyclerView.ViewHolder holder = null;
-    public fileExploererAdaptor(@NonNull Context context, @NonNull ArrayList<File> file, @NonNull String[] objects) {
+    public fileExploererAdaptor(@NonNull Context context, @NonNull ArrayList<File> file, @NonNull ArrayList<String> objects) {
         super(context, 0, objects);
         mInflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.file = file;
@@ -85,5 +85,11 @@ public class fileExploererAdaptor extends ArrayAdapter<String> {
 
     private class ViewHolder {
         public TextView textView;
+    }
+
+    public void delete(int position){
+       this.remove(this.getItem(position));
+       this.notifyDataSetChanged();
+       file.get(position).delete();
     }
 }

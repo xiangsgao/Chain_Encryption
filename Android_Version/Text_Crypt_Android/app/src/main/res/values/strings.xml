@@ -16,4 +16,5 @@
     <string name="convert_button">CONVERT</string>
     <string name="title_activity_file_browser">FileBrowserActivity</string>
     <string name="menu_toggle">Use built in file explorer</string>
+    <string name="delete_menu_item">Delete</string>
 </resources>
