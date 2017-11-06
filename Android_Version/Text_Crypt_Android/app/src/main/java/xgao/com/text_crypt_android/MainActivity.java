@@ -2,6 +2,7 @@ package xgao.com.text_crypt_android;
 
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -232,10 +233,10 @@ public class MainActivity extends AppCompatActivity {
         }else {
             Intent intent = new Intent();
             intent.setType(DocumentsContract.Document.MIME_TYPE_DIR);
-            if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
+           try{
                 startActivityForResult(Intent.createChooser(intent, "Choose ES File Explorer to pick directory, download it from playstore if you don't have it installed already"), intentCodes.REQUEST_DIRECTORY);
-            } else {
-                Toast.makeText(this.getApplicationContext(), "Please install ES File Manager", Toast.LENGTH_SHORT).show();
+            } catch (ActivityNotFoundException e){
+                Toast.makeText(this.getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
 
