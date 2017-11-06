@@ -91,5 +91,6 @@ public class fileExploererAdaptor extends ArrayAdapter<String> {
        this.remove(this.getItem(position));
        this.notifyDataSetChanged();
        file.get(position).delete();
+        file.remove(position);
     }
 }

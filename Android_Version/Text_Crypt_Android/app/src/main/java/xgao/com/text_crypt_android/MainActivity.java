@@ -36,18 +36,18 @@ import static xgao.com.text_crypt_android.File_Browser.fileBrowserHelper.getFile
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String ENCRYPTMODE = "ENCRYPT";
-    public static final String DECRYPTMODE = "DECRYPT";
+    public static final String ENCRYPT_MODE = "ENCRYPT";
+    public static final String DECRYPT_MODE = "DECRYPT";
 
     private model model;
     private EditText inputPath;
     private EditText outputPath;
     private EditText password;
     private EditText passWordConfirmed;
-    private String encryptionMode = ENCRYPTMODE;
+    private String encryptionMode = ENCRYPT_MODE;
     private ImageButton openFile;
     private TextView openFileLabel;
-    private boolean useBuiltInFileExploerer = true;
+    private boolean useBuiltInFileExplorer = true;
     private Uri pathUri = null;
 
 
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             this.displayAlert("Password can not be empty, use at least 8 characters if you are serious about security");
             return;
         }
-         if(encryptionMode.equals(ENCRYPTMODE)&&!password.equals(passWordConfirmed)){
+         if(encryptionMode.equals(ENCRYPT_MODE)&&!password.equals(passWordConfirmed)){
              this.displayAlert("Your passwords do not match" );
              return;
          }
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void browseInputClicked(View view) {
-    if(this.useBuiltInFileExploerer){
+    if(this.useBuiltInFileExplorer){
         Intent intent = new Intent(MainActivity.this, FileBrowserActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt(FileBrowserActivity.BROWSER_MODE, intentCodes.REQUEST_FILE);
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
     public void openFileClicked(View view){
         // This lets an app to browse the file but doesn't return the file uri. The opening folder is defined by Uri
         // Environment will return the path to the default home directory
-        if(this.useBuiltInFileExploerer){
+        if(this.useBuiltInFileExplorer){
             Intent intent = new Intent(MainActivity.this,FileBrowserActivity.class);
             Bundle bundle = new Bundle();
             bundle.putInt(FileBrowserActivity.BROWSER_MODE, intentCodes.REQUEST_FILE_BROWSER);
@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
                     if (result == null) {
                         break;
                     }
-                    if(this.useBuiltInFileExploerer){
+                    if(this.useBuiltInFileExplorer){
                         this.pathUri = null;
                         this.inputPath.setText(result.getStringExtra(FileBrowserActivity.RETURN_PATH));
                     }else {
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                     if (result == null) {
                         break;
                     }
-                    if(this.useBuiltInFileExploerer) {
+                    if(this.useBuiltInFileExplorer) {
                         this.outputPath.setText(result.getStringExtra(FileBrowserActivity.RETURN_PATH));
                     }else{
                         this.outputPath.setText(result.getData().getPath());
@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void browseOutputClicked(View view) {
         // This chooses the directory only and does not return uri like the Intent.GET_DOCUMENT_TREE but return the full file path if using es file manager
-        if(this.useBuiltInFileExploerer){
+        if(this.useBuiltInFileExplorer){
             Intent intent = new Intent(MainActivity.this, FileBrowserActivity.class);
             Bundle bundle = new Bundle();
             bundle.putInt(FileBrowserActivity.BROWSER_MODE, intentCodes.REQUEST_DIRECTORY);
@@ -248,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menuToggle:
-                this.useBuiltInFileExploerer = !item.isChecked();
+                this.useBuiltInFileExplorer = !item.isChecked();
                 item.setChecked(!item.isChecked());
                 return true;
                 default:return false;
@@ -257,12 +257,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onEncryptSelected(View view) {
-        this.encryptionMode = ENCRYPTMODE;
+        this.encryptionMode = ENCRYPT_MODE;
         this.passWordConfirmed.setVisibility(View.VISIBLE);
     }
 
     public void onDecryptSelected(View view) {
-        this.encryptionMode = DECRYPTMODE;
+        this.encryptionMode = DECRYPT_MODE;
         this.passWordConfirmed.setVisibility(View.GONE);
     }
 

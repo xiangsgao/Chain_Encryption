@@ -1,19 +1,13 @@
 package xgao.com.text_crypt_android.File_Browser;
 
 
-import android.app.Application;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
-import android.os.StrictMode;
 import android.provider.OpenableColumns;
-import android.support.v4.content.FileProvider;
-import android.util.Log;
-import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import java.io.File;
@@ -23,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLConnection;
-import java.nio.channels.FileChannel;
 
 
 public class fileBrowserHelper {
@@ -37,9 +30,6 @@ public class fileBrowserHelper {
     }
 
 
-    public static void openFileIntent() {
-
-    }
 
     public static boolean checkPathValid(String path) {
         return new File(path).exists();
