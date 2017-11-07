@@ -1,7 +1,11 @@
 package xgao.com.text_crypt_android.logic;
 
 
+import android.util.Log;
+
 import java.io.File;
+
+import xgao.com.text_crypt_android.MainActivity;
 
 
 /**
@@ -14,16 +18,22 @@ public class model {
 
     private File inputFile;
     private boolean uriInput = false;
-    private boolean encryptMode = true;
+    private String uriInputFileName = "TextCryptTemFile";
     private File outputFile;
     private String key = "";
-    private String encryptionMode;
+        private String encryptionMode;
 
     public model() {
     }
 
     public void convert() throws cryptoException{
-            throw new cryptoException("Successes");
+        if (encryptionMode.equals(MainActivity.ENCRYPT_MODE)) {
+            this.encrypt();
+        }
+
+        else if(this.encryptionMode.equals(MainActivity.DECRYPT_MODE)){
+            this.decrypt();
+        }
     }
 
     public void setOutputPath(File outputFile){
@@ -63,6 +73,38 @@ public class model {
     public void setUriInput(boolean uriInput){
         this.uriInput = uriInput;
     }
+
+    private void decrypt() throws cryptoException{
+        File decryptedFile = new File(this.outputFile.getPath() +"/" +"decrypted_"+this.inputFile.getName());
+        if(decryptedFile.exists()) {
+            throw new cryptoException("File with same name already exists, delete the old one first");
+        }
+        if(uriInput){
+            uriInputFileName.substring(10);
+            String path = this.outputFile.getPath() + "/" + "decrypted_" + uriInputFileName;
+            decryptedFile = new File(path);
+        }
+        cryptoUtils.decrypt(this.key, this.inputFile, decryptedFile);
+    }
+
+    private void encrypt() throws  cryptoException{
+        File encryptedFile = new File(this.outputFile.getPath() + "/" + "encrypted_" + this.inputFile.getName());
+        if(encryptedFile.exists()) {
+                throw new cryptoException("File with same name already exists, delete the old one first");
+        }
+        if(uriInput){
+           String path = this.outputFile.getPath() + "/" + "encrypted_" + uriInputFileName;
+           encryptedFile = new File(path);
+        }
+        cryptoUtils.encrypt(this.key, this.inputFile, encryptedFile);
+
+    }
+
+    public void setUriInputFileName(String uriInputFileName){ this.uriInputFileName = uriInputFileName;}
+
+
+
+
 
 
 }

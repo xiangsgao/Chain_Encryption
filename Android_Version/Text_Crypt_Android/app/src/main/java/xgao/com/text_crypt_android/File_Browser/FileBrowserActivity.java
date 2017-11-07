@@ -14,13 +14,11 @@ import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -68,7 +66,7 @@ public class FileBrowserActivity extends ListActivity {
     public static final String SHOW_HIDDEN = "showHidden";
     public static final String RETURN_PATH = "returnPath";
     public static final String BROWSER_MODE = "browserMode";
-    private static final int MY_PERMISSIONS_REQUEST_READ_AND_WRITE_SDK = 1555454;
+    public static final int MY_PERMISSIONS_REQUEST_READ_AND_WRITE_SDK = 1555454;
     private File dir;
     private boolean showHidden = false;
     private boolean onlyDirs = true;
@@ -97,7 +95,7 @@ public class FileBrowserActivity extends ListActivity {
                 }
             }
         }
-        this.persmissionChecking();
+        this.permissionChecking();
         ((TextView) this.findViewById(R.id.currentDirectory)).setText(dir.getAbsolutePath());
 
 
@@ -229,7 +227,7 @@ public class FileBrowserActivity extends ListActivity {
 
     }
 
-    private void persmissionChecking(){
+    private void permissionChecking(){
         if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions((ListActivity) this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},  MY_PERMISSIONS_REQUEST_READ_AND_WRITE_SDK);
         }

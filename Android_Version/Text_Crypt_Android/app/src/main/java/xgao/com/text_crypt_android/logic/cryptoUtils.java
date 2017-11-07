@@ -1,15 +1,22 @@
 package xgao.com.text_crypt_android.logic;
 
 
+import android.media.MediaCodec;
+import android.util.Log;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.security.InvalidKeyException;
 import java.security.Key;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.util.Arrays;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -27,6 +34,7 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class cryptoUtils {
     private static final String TRANSFORMATION = "AES";
+    private static final String ALGORITHM = "AES";
  
     public static void encrypt(String key, File inputFile, File outputFile)
             throws cryptoException {
@@ -41,13 +49,12 @@ public class cryptoUtils {
     private static void doCrypto(int cipherMode, String key, File inputFile,
             File outputFile) throws cryptoException {
     	// This generates the key, helpful if user enters key not in 16, 32, 64, or 128 bytes
-    	Key crytoKey = generateCrytoKey(key);
-        try {
-        	if(key == null) {
-        		throw new cryptoException("Key conversion error");
-        	}
+            SecretKeySpec secretKey = convertKeyTo128bits(key);
+        try{
+            // This is the default and supports only 128 bits or 256 bits key length
+            // Key secretKey = new SecretKeySpec(key.getBytes(), ALGORITHM);
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-            cipher.init(cipherMode, crytoKey);
+            cipher.init(cipherMode, secretKey);
             FileInputStream inputStream = new FileInputStream(inputFile);
             byte[] inputBytes = new byte[(int) inputFile.length()];
             inputStream.read(inputBytes);
@@ -63,27 +70,43 @@ public class cryptoUtils {
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
                 | InvalidKeyException | BadPaddingException
                 | IllegalBlockSizeException | IOException ex) {
-            throw new cryptoException("Error encrypting/decrypting file\nTry checking if the file you selected is encrypted or not\nAlso check if the key is correct when decrypting", ex);
+            throw new cryptoException("Oops, your key seems wrong or this file is not encrypted");
         }
     }
     
+
     // generating cryto key using salt. This allows user to enter unique keys of any length, none zero of course
-    private static SecretKey generateCrytoKey(String userKey) {
-    	char[] charKey = {userKey.charAt(0)};
-    	byte[] salt = new String (charKey).getBytes();
-	    charKey = userKey.toCharArray();
-		SecretKeyFactory factory;
-		try {
-			factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-			KeySpec spec = new PBEKeySpec(charKey, salt, 65536, 256);
-			SecretKey tmp = factory.generateSecret(spec);
-			SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
-			return secret;
-		} catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-		
-	}
+    // This has bugs on Android java JRE so can't use or have to modified
+    private static SecretKey generateCrytoKey(String userKey) throws cryptoException{
+        char[] charKey = {userKey.charAt(0)};
+        byte[] salt = new String (charKey).getBytes();
+        charKey = userKey.toCharArray();
+        SecretKeyFactory factory;
+        try {
+            factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            KeySpec spec = new PBEKeySpec(charKey, salt, 65536, 128);
+            SecretKey tmp = factory.generateSecret(spec);
+            SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
+            return secret;
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
+          throw new cryptoException(e.getMessage());
+        }
+
+    }
+        // custom made for android
+    private static SecretKeySpec convertKeyTo128bits(String userKey) throws cryptoException{
+        byte[] key = userKey.getBytes();
+        MessageDigest sha = null;
+        try {
+            sha = MessageDigest.getInstance("SHA-1");
+        } catch (NoSuchAlgorithmException e) {
+            throw new cryptoException("key conversion error");
+        }
+        key = sha.digest(key);
+        key = Arrays.copyOf(key, 16); // use only first 128 bit
+
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
+        return secretKeySpec;
+
+    }
 }

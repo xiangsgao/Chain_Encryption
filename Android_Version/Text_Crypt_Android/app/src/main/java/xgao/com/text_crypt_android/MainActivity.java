@@ -1,17 +1,24 @@
 package xgao.com.text_crypt_android;
 
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ListActivity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -27,13 +34,11 @@ import java.io.File;
 import java.io.IOException;
 
 import xgao.com.text_crypt_android.File_Browser.FileBrowserActivity;
+import xgao.com.text_crypt_android.File_Browser.fileBrowserHelper;
 import xgao.com.text_crypt_android.logic.cryptoException;
 import xgao.com.text_crypt_android.logic.intentCodes;
 import xgao.com.text_crypt_android.logic.model;
 
-import static xgao.com.text_crypt_android.File_Browser.fileBrowserHelper.AndroidUriToTempFile;
-import static xgao.com.text_crypt_android.File_Browser.fileBrowserHelper.checkPathValid;
-import static xgao.com.text_crypt_android.File_Browser.fileBrowserHelper.getFileName;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,39 +51,39 @@ public class MainActivity extends AppCompatActivity {
     private EditText password;
     private String encryptionMode;
     private boolean useBuiltInFileExplorer = true;
-    private Uri pathUri;
+    private String uriFilePath = Environment.getExternalStorageDirectory().getPath() + "/.TextCryptTemFile";
+    private boolean uriInput;
 
 
 
 
 
-    private void savePerferences (){
+    private void savePreferences(){
         SharedPreferences save = getSharedPreferences("entry_data", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = save.edit();
         editor.putString("inputPath", this.inputPath.getText().toString());
         editor.putString("outputPath", this.outputPath.getText().toString());
         editor.putString("encryptionMode", encryptionMode);
         editor.putBoolean("useBuiltInFileExplorer", useBuiltInFileExplorer);
-        if(pathUri!=null) {
-            editor.putString("pathUri", pathUri.toString());
-        }
+        editor.putBoolean("uriInput", uriInput);
         editor.commit();
     }
 
-    private void restorePerferences(){
+    private void restorePreferences(){
         SharedPreferences restore = getSharedPreferences("entry_data", Context.MODE_PRIVATE);
         inputPath.setText(restore.getString("inputPath", ""));
         outputPath.setText(restore.getString("outputPath", ""));
         encryptionMode = restore.getString("encryptionMode", ENCRYPT_MODE);
         useBuiltInFileExplorer = restore.getBoolean("useBuiltInFileExplorer", true);
+        uriInput = restore.getBoolean("uriInput", false);
         if(encryptionMode.equals(DECRYPT_MODE)){
             ((RadioButton) findViewById(R.id.decryptRadio)).setChecked(true);
         }else{
             ((RadioButton) findViewById(R.id.encryptRadio)).setChecked(true);
         }
-            pathUri = Uri.parse(restore.getString("pathUri", ""));
-        if(pathUri.toString().equals("")){
-            pathUri = null;
+        if(uriInput && !new File(uriFilePath).exists()) {
+            this.uriInput = false;
+            this.inputPath.setText("");
         }
     }
 
@@ -95,7 +100,9 @@ public class MainActivity extends AppCompatActivity {
         password =  this.findViewById(R.id.passWordInput);
         model = new model();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        restorePerferences();
+        restorePreferences();
+        // Gotta do this here too because of stupid bugs
+        this.permissionChecking();
     }
 
 
@@ -109,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        this.savePerferences();
+        this.savePreferences();
     }
 
     public void convertClicked(View view) throws IOException {
@@ -118,12 +125,12 @@ public class MainActivity extends AppCompatActivity {
              this.displayAlert("Password can not be empty, your key should have at least 8 characters or more if you are serious about security");
              return;
          }
-         model.setKey(this.password.toString());
+         model.setKey(this.password.getText().toString());
          model.setOutputPath(new File(this.outputPath.getText().toString()));
-         if (this.pathUri != null){
+         if (uriInput){
              model.setUriInput(true);
-             tempFile = AndroidUriToTempFile(this.pathUri,this);
-             model.setInputFile(tempFile);
+             model.setInputFile(new File(uriFilePath));
+             model.setUriInputFileName(this.inputPath.getText().toString());
          }else{
              model.setInputFile(new File(this.inputPath.getText().toString()));
          }
@@ -134,12 +141,16 @@ public class MainActivity extends AppCompatActivity {
              return;
          }
 
+         model.setEncryptionMode(encryptionMode);
+
          try{
              model.convert();
              this.displayAlert("Success! Tap on File Browser to open the destination file directory");
          }catch (cryptoException e){
              this.displayAlert(e.getMessage());
+             return;
          }
+
         if (tempFile!=null){
              tempFile.delete();
         }
@@ -179,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this,FileBrowserActivity.class);
             Bundle bundle = new Bundle();
             bundle.putInt(FileBrowserActivity.BROWSER_MODE, intentCodes.REQUEST_FILE_BROWSER);
-            if(checkPathValid(this.outputPath.getText().toString())) {
+            if(fileBrowserHelper.checkPathValid(this.outputPath.getText().toString())) {
                 bundle.putString(FileBrowserActivity.START_DIR, this.outputPath.getText().toString());
             }
             else{
@@ -191,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, intentCodes.REQUEST_FILE_BROWSER);
         }else {
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            if(checkPathValid(this.outputPath.getText().toString())){
+            if(fileBrowserHelper.checkPathValid(this.outputPath.getText().toString())){
                 intent.setDataAndType(Uri.parse(this.outputPath.getText().toString()), "*/*");
             }else {
                 intent.setDataAndType(Uri.parse(Environment.getExternalStorageDirectory().getPath()), "*/*");
@@ -216,11 +227,19 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
                     if(this.useBuiltInFileExplorer){
-                        this.pathUri = null;
+                        this.uriInput = false;
                         this.inputPath.setText(result.getStringExtra(FileBrowserActivity.RETURN_PATH));
+                        if(fileBrowserHelper.checkPathValid(uriFilePath)){
+                            new File(uriFilePath).delete();
+                        }
                     }else {
-                        this.inputPath.setText(getFileName(result.getData(), this));
-                       pathUri = result.getData();
+                        this.inputPath.setText(fileBrowserHelper.getFileName(result.getData(), this));
+                        this.uriInput = true;
+                        try {
+                            fileBrowserHelper.AndroidUriToTempFile(result.getData(), this);
+                        } catch (IOException e) {
+                            displayAlert("Can't read file, did you give me permission when I asked?");
+                        }
                     }
                     break;
 
@@ -278,6 +297,9 @@ public class MainActivity extends AppCompatActivity {
                 this.useBuiltInFileExplorer = !item.isChecked();
                 item.setChecked(!item.isChecked());
                 return true;
+            case R.id.about_menu_item:
+                Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+                startActivity(intent);
                 default:return false;
         }
 
@@ -314,6 +336,32 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (123) {
+            case FileBrowserActivity.MY_PERMISSIONS_REQUEST_READ_AND_WRITE_SDK:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }else{
+                    this.displayAlert("You gotta give me access to your files bud");
+                }
+                break;
+        }
+
+    }
+
+    private void permissionChecking(){
+        if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},  123);
+        }
+        else{
+          return;
+        }
+    }
+
+
+
 
 }
 

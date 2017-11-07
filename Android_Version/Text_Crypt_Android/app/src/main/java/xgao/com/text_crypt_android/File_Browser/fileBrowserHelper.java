@@ -37,7 +37,7 @@ public class fileBrowserHelper {
 
 
     public static File AndroidUriToTempFile(Uri uri, Context context) throws IOException {
-        File result = new File(Environment.getExternalStorageDirectory().getPath() + "/TextCryptTemFile");
+        File result = new File(Environment.getExternalStorageDirectory().getPath() + "/.TextCryptTemFile");
         if (result.exists()) {
             result.delete();
         }

@@ -17,4 +17,6 @@
     <string name="title_activity_file_browser">FileBrowserActivity</string>
     <string name="menu_toggle">Use built in file explorer</string>
     <string name="delete_menu_item">Delete</string>
+    <string name="about_text">Please report any bugs you found in the google play comment section. Also visit my github on your desktop computer to download the desktop version. It should be able to decrypt your encrypted file that you transfer from your phone:</string>
+    <string name="github_url">https://github.com/GAO23/Text-Crypt</string>
 </resources>
