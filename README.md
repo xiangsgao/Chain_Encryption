@@ -11,7 +11,7 @@ Latest jar is thoughly tested on both windows and linux. Mac OS is not yet teste
 Bugs fixed: Changing the salted key length to 128 from 256 to ensure compatibility with older Java JRE.
 
 # Android version instruction
-I am working to port it to android right now
+Android version is finished! Download and install the Text-Crypt.apk in the Android version folder. Be sure to eanble unknown sources first.
 
 # QT version instruction
 This will be done after android port is done. I will create a .exe executable for windows and an executable .sh for linux. I may even create an installer for both platform cuz why the hell not? No executable for Mac platform beacuse I have no mac and I don't know how to use a mac. Use java version if you wanna run the software on Mac OS.
