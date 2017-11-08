@@ -19,7 +19,7 @@ THE ANDROID VERSION IS ON GOOGLE PLAY: https://play.google.com/store/apps/detail
 Working on it now, I will create a .exe executable for windows and an executable .sh for linux. I may even create an installer for both platform cuz why the hell not? No executable for Mac platform beacuse I have no mac and I don't know how to use a mac. Use java version if you wanna run the software on Mac OS.
 
 # Bugs and features left to work on:
-The app needs support for encytpion of file greater than 500mb which is the limit of the current implementation. This is beacuse my current loads files into ram for encytpion which is very fast for small files but as you can tell, laerge files will run into memoery issues. 
+The app needs support for encytpion of file greater than 500mb which is the limit of the current implementation. This is beacuse my current code will load files into ram for encytpion which is very fast for small files but as you can tell, large files will run into memory issues. 
 
 Performance optimization is needed. Encrytion is a lengthly and resource heavy proccess, espeically for huge files. I will need to optimized the prefomeance so the program does not freeze and stay responsive. 
 
