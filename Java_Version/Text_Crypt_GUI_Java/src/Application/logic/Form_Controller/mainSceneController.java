@@ -81,10 +81,7 @@ public class mainSceneController implements Initializable{
 		
 		// This checks if the file path is valid
 		Path path = Paths.get(this.filePath.getText());
-		if(this.filePath.getText().length()<4) {
-			alertPopUp.display("Please Enter a valid file path.\nUse the browse button to help you.");
-		}
-		else if(!Files.exists(path)) {
+		if(!Files.exists(path)) {
 			alertPopUp.display("Please enter a valid file path.\nUse the browse button to help you.");
 		}
 		else {

@@ -21,22 +21,12 @@ public class model {
 		this.mainSceneController.inializeModel(this);
 	}
 	
-	public void convert()  {
+	public void convert()  throws cryptoException{
 		if(this.encryptedMode) {
-			try {
 				this.encrypt();
-				alertPopUp.display("Success!");
-			} catch (cryptoException e) {
-				alertPopUp.display(e.getMessage());
-			}
 		}
 		else {
-			try {
 				this.decrypt();
-				alertPopUp.display("Success!");
-			} catch (cryptoException e) {
-				alertPopUp.display(e.getMessage());
-			}
 		}
 	}
 	
@@ -66,7 +56,12 @@ public class model {
 		if(encryptedFile.exists()) {
 			throw new cryptoException("File with same name already exists, delete the old one first");
 		}
-		cryptoUtils.encrypt(this.key, this.inputFile, encryptedFile);
+		try {
+			cryptoUtils.encrypt(this.key, this.inputFile, encryptedFile);
+			}catch(OutOfMemoryError e) {
+				throw new  cryptoException("File is too big dude, your computer does not have enough ram to convert the whole thing\nDon't worry though, I'll fix it in the next patch");
+			}
+
 			
 		}
 	
@@ -75,7 +70,11 @@ public class model {
 		if(decryptedFile.exists()) {
 			throw new cryptoException("File with same name already exists, delete the old one first");
 		}
+		try {
 		cryptoUtils.decrypt(this.key, this.inputFile, decryptedFile);
+		}catch(OutOfMemoryError e) {
+			throw new  cryptoException("File is too big dude, your computer does not have enough ram to convert the whole thing\nDon't worry though, I'll fix it in the next patch");
+		}
 			
 		}
 		

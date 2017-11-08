@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
+import Application.logic.cryptoException;
 import Application.logic.model;
 import Application.ui.alertPopUp;
 import Application.ui.popUp;
@@ -93,8 +94,13 @@ public class popUpController implements Initializable{
 			this.model.setOutPutFile(this.popUpBrowsePath.getText());
 			this.model.setEncrycted(this.encryptRadio.isSelected());
 			popUp.closeWindow();
+			try {
 			this.model.convert();
-			};
+			alertPopUp.display("Success!");
+			} catch(cryptoException k) {
+				alertPopUp.display(k.getMessage());
+			}
+		}
 	}
 	
 	@FXML public void cancelClicked(ActionEvent e) {
