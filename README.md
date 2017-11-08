@@ -21,7 +21,7 @@ Working on it now, I will create a .exe executable for windows and an executable
 # Bugs and features left to work on:
 The app needs support for encytpion of file greater than 500mb which is the limit of the current implementation. This is beacuse my current code will load files into ram for encytpion which is very fast for small files but as you can tell, large files will run into memory issues. 
 
-Performance optimization is needed. Encrytion is a lengthly and resource heavy proccess, espeically for huge files. I will need to optimized the prefomeance so the program does not freeze and stay responsive. 
+Performance optimization is needed. Encrytion is a lengthly and resource heavy proccess, espeically for huge files. I will need to optimized the performance so the program does not freeze and stay responsive. 
 
 No guranteed when I will do it beacuse this app is made mostly for my personal use and so far it fits my needs. This readme is for those few who finds this relevent.
 
