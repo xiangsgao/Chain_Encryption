@@ -25,4 +25,6 @@ Performance optimization is needed. Encrytion is a lengthly and resource heavy p
 
 No guranteed when I will do it beacuse this app is made mostly for my personal use and so far it fits my needs. This readme is for those few who finds this relevent.
 
+This app will be rename, awful name currently.
+
 
