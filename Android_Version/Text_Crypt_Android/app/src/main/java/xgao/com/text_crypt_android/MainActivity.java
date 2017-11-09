@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText password;
     private String encryptionMode;
     private boolean useBuiltInFileExplorer = true;
-    private String uriFilePath = Environment.getExternalStorageDirectory().getPath() + "/.TextCryptTemFile";
+    private String uriFilePath;
     private boolean uriInput;
 
 
@@ -93,6 +93,21 @@ public class MainActivity extends AppCompatActivity {
         //text button color tint, accent, background, ect can all be changed at once in the styles.xml
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        this.uriFilePath = getFilesDir() + "/.TextCryptTemFile";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         inputPath = this.findViewById(R.id.inputPath);
         this.inputPath.setFocusable(false);
         outputPath = this.findViewById(R.id.outPutPath);
@@ -119,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void convertClicked(View view) throws IOException {
-         File tempFile = null;
+         File tempFile = new File(this.uriFilePath);
          if(this.password.getText().toString().equals("")){
              this.displayAlert("Password can not be empty, your key should have at least 8 characters or more if you are serious about security");
              return;
@@ -128,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
          model.setOutputPath(new File(this.outputPath.getText().toString()));
          if (uriInput){
              model.setUriInput(true);
-             model.setInputFile(new File(uriFilePath));
+             model.setInputFile(tempFile);
              model.setUriInputFileName(this.inputPath.getText().toString());
          }else{
              model.setInputFile(new File(this.inputPath.getText().toString()));
@@ -150,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
              return;
          }
 
-        if (tempFile!=null){
+        if (tempFile.exists()){
              tempFile.delete();
         }
     }

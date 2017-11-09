@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import xgao.com.text_crypt_android.MainActivity;
 import xgao.com.text_crypt_android.R;
 import xgao.com.text_crypt_android.logic.intentCodes;
 
@@ -252,7 +253,7 @@ public class FileBrowserActivity extends ListActivity {
 
 
 
-    private void displayAlert(String alertMessage){
+    public void displayAlert(String alertMessage){
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle("Alert");
         alertDialog.setMessage(alertMessage);
@@ -271,7 +272,7 @@ public class FileBrowserActivity extends ListActivity {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
-                        ((fileExploererAdaptor) FileBrowserActivity.this.getListAdapter()).delete(position);
+                        ((fileExploererAdaptor) FileBrowserActivity.this.getListAdapter()).delete(position, FileBrowserActivity.this);
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:

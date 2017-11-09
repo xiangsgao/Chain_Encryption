@@ -87,10 +87,15 @@ public class fileExploererAdaptor extends ArrayAdapter<String> {
         public TextView textView;
     }
 
-    public void delete(int position){
-       this.remove(this.getItem(position));
-       this.notifyDataSetChanged();
-       file.get(position).delete();
-        file.remove(position);
+    public void delete(int position, Context context){
+      boolean deleteSuccess =  file.get(position).delete();
+      if(deleteSuccess) {
+          file.remove(position);
+          this.remove(this.getItem(position));
+          this.notifyDataSetChanged();
+      }
+      else{
+          ((FileBrowserActivity) context).displayAlert("Due to Android SDK limitation (Actually, it's because I am too lazy to rewrite my entire code for built in File Browser, please use third party file manager to delete files from your removable SD card");
+      }
     }
 }

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.Permission;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
@@ -65,6 +66,9 @@ public class cryptoUtils {
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
                 | InvalidKeyException | BadPaddingException
                 | IllegalBlockSizeException | IOException ex) {
+            if(ex.getMessage().contains("Permission")){
+                throw new cryptoException("Sorry but writing files to removable SD card is unsupported due to Android SDK limitation. (Actually I am just lazy and sick of rewriting and debugging my codes) Use third party file manager to move converted files from internal storage to external storage as an alternative.");
+            }
             throw new cryptoException("Oops, your key seems wrong or this file is not encrypted");
         }
     }
@@ -84,7 +88,7 @@ public class cryptoUtils {
             SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
             return secret;
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-          throw new cryptoException(e.getMessage());
+          throw new cryptoException("Key is wrong or file is not encrypted");
         }
 
     }
