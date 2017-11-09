@@ -1,8 +1,6 @@
 package xgao.com.text_crypt_android.logic;
 
 
-import android.util.Log;
-
 import java.io.File;
 
 import xgao.com.text_crypt_android.MainActivity;
@@ -28,11 +26,19 @@ public class model {
 
     public void convert() throws cryptoException{
         if (encryptionMode.equals(MainActivity.ENCRYPT_MODE)) {
-            this.encrypt();
+            try {
+                this.encrypt();
+            }catch (OutOfMemoryError e){
+                throw new cryptoException("File is too big, app can not fit the file into your ram but don't worry, I will fix it in a patch.");
+            }
         }
 
         else if(this.encryptionMode.equals(MainActivity.DECRYPT_MODE)){
-            this.decrypt();
+            try {
+                this.decrypt();
+            }catch (OutOfMemoryError e){
+                throw new cryptoException("File is too big, app can not fit the file into your ram but don't worry, I will fix it in a patch.");
+            }
         }
     }
 
@@ -53,7 +59,7 @@ public class model {
         this.encryptionMode = encryptionMode;
     }
 
-    public String isEeverythingValid(){
+    public String isEverythingValid(){
         if(inputFile == null || outputFile == null) {
             return "Please select both an input file and an output destination";
         }

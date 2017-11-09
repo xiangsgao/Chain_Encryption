@@ -10,6 +10,7 @@ import Application.logic.cryptoException;
 import Application.logic.model;
 import Application.ui.alertPopUp;
 import Application.ui.popUp;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -94,12 +95,10 @@ public class popUpController implements Initializable{
 			this.model.setOutPutFile(this.popUpBrowsePath.getText());
 			this.model.setEncrycted(this.encryptRadio.isSelected());
 			popUp.closeWindow();
-			try {
-			this.model.convert();
-			alertPopUp.display("Success!");
-			} catch(cryptoException k) {
-				alertPopUp.display(k.getMessage());
-			}
+			model.convertButtonSetConvertingStatus(true);
+			Thread convertThread = new Thread(new convertThread());
+			convertThread.start();
+			
 		}
 	}
 	
@@ -127,6 +126,22 @@ public class popUpController implements Initializable{
 	            {
 	                popUpController.this.confirmedSelected(new ActionEvent());
 	            }
+			
+		}
+		
+	}
+	
+	private class convertThread implements Runnable{
+
+		@Override
+		public void run(){
+			try {
+				popUpController.this.model.convert();
+				Platform.runLater(() -> alertPopUp.display("Success!"));
+			} catch (cryptoException e) {
+				Platform.runLater(() -> model.convertButtonSetConvertingStatus(false));
+				Platform.runLater(() -> alertPopUp.display(e.getMessage()));
+			}
 			
 		}
 		

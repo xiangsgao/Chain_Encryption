@@ -1,6 +1,8 @@
 package Application.logic;
 import Application.ui.alertPopUp;
 import Application.ui.mainWindow;
+import javafx.scene.control.Button;
+
 import java.io.File;
 import Application.logic.cryptoException;
 import Application.logic.Form_Controller.mainSceneController;
@@ -14,11 +16,13 @@ public class model {
 	private File inputFile;
 	private String outputFilePath;
 	private boolean encryptedMode = true;
+	private Button convertButton;
 	
-	public model(mainWindow window, mainSceneController mainSceneController){
+	public model(mainWindow window, mainSceneController mainSceneController, Button convertButton){
 		this.window = window;
 		this.mainSceneController = mainSceneController;
 		this.mainSceneController.inializeModel(this);
+		this.convertButton = convertButton;
 	}
 	
 	public void convert()  throws cryptoException{
@@ -75,8 +79,18 @@ public class model {
 		}catch(OutOfMemoryError e) {
 			throw new  cryptoException("File is too big dude, your computer does not have enough ram to convert the whole thing\nDon't worry though, I'll fix it in the next patch");
 		}
-			
+	}
+	
+	public void convertButtonSetConvertingStatus(Boolean isConverting) {
+		if(isConverting) {
+			this.convertButton.setText("Converting...");
+			this.convertButton.setDisable(true);
 		}
+		else {
+			this.convertButton.setText("Convert");
+			this.convertButton.setDisable(false);
+		}
+	}
 		
 	
 	

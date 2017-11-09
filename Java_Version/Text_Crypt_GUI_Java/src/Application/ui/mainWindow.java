@@ -10,6 +10,7 @@ import Application.logic.Form_Controller.popUpController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 public class mainWindow {
 
 	private model model;
@@ -28,10 +29,12 @@ public class mainWindow {
 		FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/Application/ui/Forms/main_screen.fxml"));
 		root = loader.load();
 		Scene scene = new Scene(root);
-		this.model = new model(this, loader.getController());
 		this.stage = stage;
 		this.stage.setScene(scene);
 		this.stage.show();
+		// JavaFX version of getViewById, gotta do this after the scene has been render or it returns null. Use @FXML if all fails
+			Button convertButton = (Button)loader.getNamespace().get("convertButton");
+			this.model = new model(this, loader.getController(), convertButton);
 	}
 		
 	

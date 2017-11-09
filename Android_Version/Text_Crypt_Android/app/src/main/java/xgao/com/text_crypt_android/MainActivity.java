@@ -3,7 +3,6 @@ package xgao.com.text_crypt_android;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -134,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
          }else{
              model.setInputFile(new File(this.inputPath.getText().toString()));
          }
-         String validity = model.isEeverythingValid();
+         String validity = model.isEverythingValid();
 
          if(!validity.equals(model.ALL_GOOD)){
              displayAlert(validity);
