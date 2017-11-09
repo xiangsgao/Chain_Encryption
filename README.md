@@ -11,8 +11,20 @@ Latest jar is thoughly tested on both windows and linux. Mac OS is not yet teste
 Bugs fixed: Changing the salted key length to 128 from 256 to ensure compatibility with older Java JRE.
 
 # Android version instruction
-Android version is finished! Download and install the Text-Crypt.apk in the Android version folder. Be sure to enable unknown sources first.
+Android version is finished! Download and install the Text-Crypt.apk in the Android version folder. Be sure to enable unknown sources first.  
+THE ANDROID VERSION IS ON GOOGLE PLAY: https://play.google.com/store/apps/details?id=xgao.com.text_crypt_android
+
 
 # QT version instruction
 Working on it now, I will create a .exe executable for windows and an executable .sh for linux. I may even create an installer for both platform cuz why the hell not? No executable for Mac platform beacuse I have no mac and I don't know how to use a mac. Use java version if you wanna run the software on Mac OS.
+
+# Bugs and features left to work on:
+The app needs support for encytpion of file greater than 500mb which is the limit of the current implementation. This is beacuse my current code will load files into ram for encytpion which is very fast for small files but as you can tell, large files will run into memory issues. 
+
+Performance optimization is needed. Encrytion is a lengthly and resource heavy proccess, espeically for huge files. I will need to optimized the performance so the program does not freeze and stay responsive. 
+
+No guranteed when I will do it beacuse this app is made mostly for my personal use and so far it fits my needs. This readme is for those few who finds this relevent.
+
+This app will be rename, awful name currently.
+
 
