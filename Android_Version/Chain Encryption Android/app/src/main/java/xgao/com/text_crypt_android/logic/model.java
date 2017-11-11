@@ -29,7 +29,6 @@ public class model  implements Parcelable{
     }
 
     public void convert() throws cryptoException{
-        Log.d("Debugging", String .valueOf(uriInput) + " uri Input");
         if (encryptionMode.equals(MainActivity.ENCRYPT_MODE)) {
             try {
                 this.encrypt();

@@ -27,7 +27,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,7 +38,6 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 
 import xgao.com.text_crypt_android.File_Browser.FileBrowserActivity;
 import xgao.com.text_crypt_android.File_Browser.fileBrowserHelper;
@@ -61,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean useBuiltInFileExplorer = true;
     private String uriFilePath;
     private boolean uriInput;
+    private boolean previousUriParseFailed;
 
 
 
@@ -68,9 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void savePreferences(){
         if(!findViewById(R.id.browseInput).isEnabled()){
-            this.inputPath.setText("");
-            new File(uriFilePath).delete();
-            this.uriInput = false;
+            this.previousUriParseFailed = true;
         }
         SharedPreferences save = getSharedPreferences("entry_data", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = save.edit();
@@ -79,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         editor.putString("encryptionMode", encryptionMode);
         editor.putBoolean("useBuiltInFileExplorer", useBuiltInFileExplorer);
         editor.putBoolean("uriInput", uriInput);
+        editor.putBoolean("parseFailed", previousUriParseFailed);
         if(!uriInput){
             new File(uriFilePath).delete();
         }
@@ -92,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         encryptionMode = restore.getString("encryptionMode", ENCRYPT_MODE);
         useBuiltInFileExplorer = restore.getBoolean("useBuiltInFileExplorer", true);
         uriInput = restore.getBoolean("uriInput", false);
+        previousUriParseFailed = restore.getBoolean("parseFailed", false);
         if(encryptionMode.equals(DECRYPT_MODE)){
             ((RadioButton) findViewById(R.id.decryptRadio)).setChecked(true);
         }else{
@@ -103,6 +102,11 @@ public class MainActivity extends AppCompatActivity {
         }
         if(!uriInput && new File(uriFilePath).exists()){
             new File(uriFilePath).delete();
+        }
+        if(this.previousUriParseFailed){
+            this.inputPath.setText("");
+            this.previousUriParseFailed = false;
+            displayAlert("Previous input file failed to load. You can either keep the app alive until it finishes loading or use built in browser to avoid parsing the input file.");
         }
     }
 
@@ -141,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void convertClicked(View view) throws IOException {
          File tempFile = new File(this.uriFilePath);
-        Log.d("Debugging", String.valueOf(tempFile.exists()) + " file exists");
          if(this.password.getText().toString().equals("")){
              this.displayAlert("Password can not be empty, your key should have at least 8 characters or more if you are serious about security");
              return;
@@ -408,7 +411,7 @@ public class MainActivity extends AppCompatActivity {
                 Bundle reply = msg.getData();
                 boolean success = reply.getBoolean("success");
                 if (success){
-                    displayAlert("Success!Tap on file browser to open converted file directory");
+                    displayAlert("Success! Tap on file browser to open converted file directory");
                 }else{
                     String errorMessage = reply.getString("error");
                     displayAlert(errorMessage);
