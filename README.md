@@ -18,4 +18,4 @@ QT version is scrapped. I found out c++ encyrption library like Crypto++ has dif
 
 # Known Bugs or issues:
 
-The app needs support for encytpion of file greater than 500mb which is the limit of the current implementation. This is beacuse my current code will load files into ram for encytpion which is very fast for small files but as you can tell, large files will run into memory issues.
+The app needs support for encryption of file greater than 500mb which is the limit of the current implementation. This is beacuse my current code will load files into ram for encryption which is very fast for small files but as you can tell, large files will run into memory issues.
