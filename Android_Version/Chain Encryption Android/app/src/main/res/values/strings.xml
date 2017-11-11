@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Text Crypt</string>
+    <string name="app_name">Chain Encryption</string>
     <string name="instruction_label1">Click on the browse to select a file to convert</string>
     <string name="browse_button">Browse</string>
     <string name="input_path_hint">File to convert</string>
@@ -18,5 +18,5 @@
     <string name="menu_toggle">Use built in file explorer</string>
     <string name="delete_menu_item">Delete</string>
     <string name="about_text">Please report any bugs you found in the google play comment section. Also visit my github on your desktop computer to download the desktop version. It should be able to decrypt your encrypted file that you transfer from your phone:</string>
-    <string name="github_url">https://github.com/GAO23/Text-Crypt</string>
+    <string name="github_url">https://github.com/GAO23/Chain_Encryption.git</string>
 </resources>

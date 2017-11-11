@@ -1,6 +1,10 @@
 package xgao.com.text_crypt_android.logic;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
+
 import java.io.File;
 
 import xgao.com.text_crypt_android.MainActivity;
@@ -10,7 +14,7 @@ import xgao.com.text_crypt_android.MainActivity;
  * Created by xgao on 10/21/17.
  */
 
-public class model {
+public class model  implements Parcelable{
 
     public static final String ALL_GOOD = "Everything is good";
 
@@ -19,12 +23,13 @@ public class model {
     private String uriInputFileName = "TextCryptTemFile";
     private File outputFile;
     private String key = "";
-        private String encryptionMode;
+    private String encryptionMode;
 
     public model() {
     }
 
     public void convert() throws cryptoException{
+        Log.d("Debugging", String .valueOf(uriInput) + " uri Input");
         if (encryptionMode.equals(MainActivity.ENCRYPT_MODE)) {
             try {
                 this.encrypt();
@@ -109,8 +114,39 @@ public class model {
     public void setUriInputFileName(String uriInputFileName){ this.uriInputFileName = uriInputFileName;}
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeSerializable(this.inputFile);
+        dest.writeByte(this.uriInput ? (byte) 1 : (byte) 0);
+        dest.writeString(this.uriInputFileName);
+        dest.writeSerializable(this.outputFile);
+        dest.writeString(this.key);
+        dest.writeString(this.encryptionMode);
+    }
 
+    protected model(Parcel in) {
+        this.inputFile = (File) in.readSerializable();
+        this.uriInput = in.readByte() != 0;
+        this.uriInputFileName = in.readString();
+        this.outputFile = (File) in.readSerializable();
+        this.key = in.readString();
+        this.encryptionMode = in.readString();
+    }
 
+    public static final Creator<model> CREATOR = new Creator<model>() {
+        @Override
+        public model createFromParcel(Parcel source) {
+            return new model(source);
+        }
 
+        @Override
+        public model[] newArray(int size) {
+            return new model[size];
+        }
+    };
 }

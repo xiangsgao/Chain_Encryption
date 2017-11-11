@@ -69,7 +69,7 @@ public class cryptoUtils {
             if(ex.getMessage().contains("Permission")){
                 throw new cryptoException("Sorry but writing files to removable SD card is unsupported due to Android SDK limitation. (Actually I am just lazy and sick of rewriting and debugging my codes) Use third party file manager to move converted files from internal storage to external storage as an alternative.");
             }
-            throw new cryptoException("Oops, your key seems wrong or this file is not encrypted");
+            throw new cryptoException("Oops, is this file encrypted? If yes, is the key right?");
         }
     }
     

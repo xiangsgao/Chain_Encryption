@@ -24,6 +24,7 @@
             android:label="@string/title_activity_file_browser"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AboutActivity"></activity>
+        <service android:name=".MainActivity$intentService"/>;
     </application>
 
 </manifest>

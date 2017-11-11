@@ -3,6 +3,7 @@ package xgao.com.text_crypt_android;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.IntentService;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,16 +15,23 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.provider.DocumentsContract;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -31,6 +39,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 
 import xgao.com.text_crypt_android.File_Browser.FileBrowserActivity;
 import xgao.com.text_crypt_android.File_Browser.fileBrowserHelper;
@@ -58,6 +67,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void savePreferences(){
+        if(!findViewById(R.id.browseInput).isEnabled()){
+            this.inputPath.setText("");
+            new File(uriFilePath).delete();
+            this.uriInput = false;
+        }
         SharedPreferences save = getSharedPreferences("entry_data", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = save.edit();
         editor.putString("inputPath", this.inputPath.getText().toString());
@@ -65,6 +79,9 @@ public class MainActivity extends AppCompatActivity {
         editor.putString("encryptionMode", encryptionMode);
         editor.putBoolean("useBuiltInFileExplorer", useBuiltInFileExplorer);
         editor.putBoolean("uriInput", uriInput);
+        if(!uriInput){
+            new File(uriFilePath).delete();
+        }
         editor.commit();
     }
 
@@ -84,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
             this.uriInput = false;
             this.inputPath.setText("");
         }
+        if(!uriInput && new File(uriFilePath).exists()){
+            new File(uriFilePath).delete();
+        }
     }
 
 
@@ -93,21 +113,7 @@ public class MainActivity extends AppCompatActivity {
         //text button color tint, accent, background, ect can all be changed at once in the styles.xml
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.uriFilePath = getFilesDir() + "/.TextCryptTemFile";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        this.uriFilePath = Environment.getExternalStorageDirectory() + "/.TextCryptTemFile";
         inputPath = this.findViewById(R.id.inputPath);
         this.inputPath.setFocusable(false);
         outputPath = this.findViewById(R.id.outPutPath);
@@ -135,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void convertClicked(View view) throws IOException {
          File tempFile = new File(this.uriFilePath);
+        Log.d("Debugging", String.valueOf(tempFile.exists()) + " file exists");
          if(this.password.getText().toString().equals("")){
              this.displayAlert("Password can not be empty, your key should have at least 8 characters or more if you are serious about security");
              return;
@@ -144,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
          if (uriInput){
              model.setUriInput(true);
              model.setInputFile(tempFile);
-             model.setUriInputFileName(this.inputPath.getText().toString());
          }else{
              model.setInputFile(new File(this.inputPath.getText().toString()));
          }
@@ -155,19 +161,17 @@ public class MainActivity extends AppCompatActivity {
              return;
          }
 
-         model.setEncryptionMode(encryptionMode);
 
-         try{
-             model.convert();
-             this.displayAlert("Success! Tap on File Browser to open the destination file directory");
-         }catch (cryptoException e){
-             this.displayAlert(e.getMessage());
-             return;
-         }
+            model.setEncryptionMode(encryptionMode);
+            intentService.converting = true;
+            Intent intent = new Intent(this, intentService.class);
+            intent.putExtra("model", model);
+            intent.putExtra("messenger", new Messenger(this.getConvertHandler()));
+            findViewById(R.id.convertButton).setEnabled(false);
+            ((Button) findViewById(R.id.convertButton)).setText("Converting");
+            startService(intent);
 
-        if (tempFile.exists()){
-             tempFile.delete();
-        }
+
     }
 
 
@@ -247,13 +251,16 @@ public class MainActivity extends AppCompatActivity {
                             new File(uriFilePath).delete();
                         }
                     }else {
-                        this.inputPath.setText(fileBrowserHelper.getFileName(result.getData(), this));
-                        this.uriInput = true;
-                        try {
-                            fileBrowserHelper.AndroidUriToTempFile(result.getData(), this);
-                        } catch (IOException e) {
-                            displayAlert("Can't read file, did you give me permission when I asked?");
-                        }
+                        this.inputPath.setText("Parsing input file...");
+                        this.inputPath.setEnabled(false);
+                        this.findViewById(R.id.convertButton).setEnabled(false);
+                        ((Button) this.findViewById(R.id.convertButton)).setText("Please wait while input file loads");
+                        findViewById(R.id.browseInput).setEnabled(false);
+                        intentService.converting = false;
+                        Intent intent = new Intent(this, intentService.class);
+                        intent.putExtra(intentService.convertUri, result.getData().toString());
+                        intent.putExtra("messenger", new Messenger(this.getUiHandler()));
+                        startService(intent);
                     }
                     break;
 
@@ -374,10 +381,103 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private Handler getUiHandler(){
+        Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                Bundle reply = msg.getData();
+                String uriString = reply.getString(intentService.convertUri);
+                Uri uri = Uri.parse(uriString);
+                MainActivity.this.inputPath.setEnabled(true);
+                MainActivity.this.inputPath.setText(fileBrowserHelper.getFileName(uri, MainActivity.this));
+                MainActivity.this.uriInput = true;
+                MainActivity.this.findViewById(R.id.convertButton).setEnabled(true);
+                ((Button) MainActivity.this.findViewById(R.id.convertButton)).setText("Convert");
+                MainActivity.this.uriInput = true;
+                findViewById(R.id.browseInput).setEnabled(true);
+                model.setUriInputFileName(MainActivity.this.inputPath.getText().toString());
+            }
+        };
+        return handler;
+    }
+
+    private Handler getConvertHandler(){
+        Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                Bundle reply = msg.getData();
+                boolean success = reply.getBoolean("success");
+                if (success){
+                    displayAlert("Success!Tap on file browser to open converted file directory");
+                }else{
+                    String errorMessage = reply.getString("error");
+                    displayAlert(errorMessage);
+                }
+                findViewById(R.id.convertButton).setEnabled(true);
+                ((Button) findViewById(R.id.convertButton)).setText("Convert");
+            }
+        };
+        return handler;
+    }
 
 
+    public static class intentService extends IntentService {
+        private static final String convertUri = "convertUri";
+        private static final String intentTAG = "com.xgao.intentService";
+        private static boolean converting = false;
 
-}
+        public intentService() {
+            super("parsing_uri_to_file_service");
+        }
+
+        @Override
+        protected void onHandleIntent(@Nullable Intent intent) {
+            if (!converting) {
+                String uriString = intent.getStringExtra(convertUri);
+                Uri uri = Uri.parse(uriString);
+                Bundle bundle = intent.getExtras();
+                bundle.putString(convertUri, uri.toString());
+                Messenger messenger = (Messenger) bundle.get("messenger");
+                Message msg = Message.obtain();
+                msg.setData(bundle); //put the data here
+                try {
+                    fileBrowserHelper.AndroidUriToTempFile(uri, this);
+                    messenger.send(msg);
+                } catch (IOException | RemoteException e) {
+                    Toast.makeText(this, "Can't parse the input file" + "\n" + e.getMessage(), Toast.LENGTH_LONG);
+                }
+
+            } else if (converting) {
+                handleConvert(intent, this);
+            }
+        }
+
+
+        private static void handleConvert(Intent intent, Context context) {
+            Bundle bundle = intent.getExtras();
+            Messenger messenger = (Messenger) bundle.get("messenger");
+            Message msg = Message.obtain();
+            xgao.com.text_crypt_android.logic.model model = intent.getParcelableExtra("model");
+            try {
+                model.convert();
+                bundle.putBoolean("success", true);
+                msg.setData(bundle);
+                messenger.send(msg);
+            } catch (cryptoException | RemoteException e) {
+                bundle.putBoolean("success", false);
+                bundle.putString("error", e.getMessage());
+                msg.setData(bundle);
+                try {
+                    messenger.send(msg);
+                } catch (RemoteException e1) {
+                    Toast.makeText(context, "Can't send unsuccessful handler message", Toast.LENGTH_LONG);
+                }
+            }
+        }
+
+        }
+
+    }
 
 
 

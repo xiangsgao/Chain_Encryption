@@ -15,7 +15,7 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     public void openGithub(View view){
-        String url = "https://github.com/GAO23/Text-Crypt";
+        String url = "https://github.com/GAO23/Chain_Encryption.git";
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
         startActivity(i);
