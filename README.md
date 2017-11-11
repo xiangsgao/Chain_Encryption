@@ -14,7 +14,7 @@ Android version is finished! Download and install the chain_ecnryption.apk in th
 
 # QT version instruction
 
-QT version is scrapped. I found out c++ encyrptin librabry like Crypto++ has different implementation than java's default librabry. Particularly, salting the passwords is one issue, making file encyption compatilbility between this, Android, and Java versoins incomptible. It can convert files, just not files converted by the Java and Andorid version. This version thus is cancel.
+QT version is scrapped. I found out c++ encyrption library like Crypto++ has different implementation than java's default library. Particularly, salting the passwords is one issue, making file encyption compatibility between this, Android, and Java versoins incomptible. It can convert files, just not files converted by the Java and Andorid version. This version thus is canceled.
 
 Known Bugs or issues:
 
