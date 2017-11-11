@@ -16,6 +16,6 @@ Android version is finished! Download and install the chain_ecnryption.apk in th
 
 QT version is scrapped. I found out c++ encyrption library like Crypto++ has different implementation than java's default library. Particularly, salting the passwords is one issue, making file encyption compatibility between this, Android, and Java versoins incomptible. It can convert files, just not files converted by the Java and Andorid version. This version thus is canceled.
 
-Known Bugs or issues:
+# Known Bugs or issues:
 
 The app needs support for encytpion of file greater than 500mb which is the limit of the current implementation. This is beacuse my current code will load files into ram for encytpion which is very fast for small files but as you can tell, large files will run into memory issues.
