@@ -10,7 +10,8 @@ Latest jar is thoughly tested on both windows and linux. Mac OS is not yet teste
 
 # Android version instruction
 
-Android version is finished! Download and install the chain_ecnryption.apk in the Android version folder. Be sure to enable unknown sources first. 
+Android version is finished! It is live on playstore 
+https://play.google.com/store/apps/details?id=com.xgao.chain_encryption
 
 # QT version instruction
 
