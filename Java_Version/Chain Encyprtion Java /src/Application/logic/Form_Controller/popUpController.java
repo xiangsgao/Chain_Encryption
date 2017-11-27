@@ -137,7 +137,9 @@ public class popUpController implements Initializable{
 		public void run(){
 			try {
 				popUpController.this.model.convert();
+				Platform.runLater(() -> model.convertButtonSetConvertingStatus(false));
 				Platform.runLater(() -> alertPopUp.display("Success!"));
+				
 			} catch (cryptoException e) {
 				Platform.runLater(() -> model.convertButtonSetConvertingStatus(false));
 				Platform.runLater(() -> alertPopUp.display(e.getMessage()));
