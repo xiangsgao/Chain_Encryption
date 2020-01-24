@@ -13,10 +13,4 @@ Latest jar is thoughly tested on both windows and linux. Mac OS is not yet teste
 Android version is finished! It is live on playstore 
 https://play.google.com/store/apps/details?id=com.xgao.chain_encryption
 
-# QT version instruction
 
-QT version is scrapped. I found out c++ encyrption library like Crypto++ has different implementation than java's default library. Particularly, salting the passwords is one issue, making file encyption compatibility between this, Android, and Java versoins incomptible. It can convert files, just not files converted by the Java and Andorid version. This version thus is canceled.
-
-# Known bugs or issues:
-
-The app needs support for encryption of file greater than 500mb which is the limit of the current implementation. This is beacuse my current code will load files into ram for encryption which is very fast for small files but as you can tell, large files will run into memory issues.
