@@ -77,7 +77,8 @@ public class OutputSceneController implements Initializable{
 		this.passwordField.setVisible(true);
 		this.passwordField.setOnKeyPressed(new enterHandler());
 		this.unhiddenPasswordField.setOnKeyPressed(new enterHandler());
-		
+		this.popUpBrowsePath.setText(model.getInputFile().getParent());
+		model.setOutPutFile(model.getInputFile().getParent());
 	}
 
 
@@ -183,6 +184,9 @@ public class OutputSceneController implements Initializable{
 		}
 		
 	}
+
+
+
 	
 	
 	
