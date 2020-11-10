@@ -3,7 +3,7 @@ import javafx.application.Application;
 // Remember to configure Forbidden Reference rule to ignore
 // in configure security
 import javafx.stage.Stage;
-import Application.ui.mainWindow;
+import Application.UI.MainWindow;
 public class Main extends Application{
 
 	public static void main(String[] args) {
@@ -12,9 +12,8 @@ public class Main extends Application{
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		stage.setTitle("Text_Crypt");
-		new mainWindow(stage);
-		
+		stage.setTitle(Constants.TITLE.getValue());
+		new MainWindow(stage);
 	}
 
 
