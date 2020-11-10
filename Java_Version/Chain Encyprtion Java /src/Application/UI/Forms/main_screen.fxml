@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Application.Controllers.MainSceneController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Application.Controllers.InputSceneController">
    <children>
       <Label fx:id="instructionLabel" text="Click on browse to select a text file to convert." VBox.vgrow="ALWAYS">
          <VBox.margin>

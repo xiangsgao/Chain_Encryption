@@ -1,5 +1,6 @@
 package Application.Controllers;
 
+import java.io.File;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,9 +9,10 @@ import java.util.ResourceBundle;
 
 import Application.Constants;
 import Application.Libs.CryptoException;
+import Application.Libs.CryptoUtils;
 import Application.Model.Model;
 import Application.UI.AlertPopUp;
-import Application.UI.PopUp;
+import Application.UI.MainWindow;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -25,7 +27,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.DirectoryChooser;
 
-public class PopUpController implements Initializable{
+public class OutputSceneController implements Initializable{
 	
 	@FXML private RadioButton encryptRadio;
 	@FXML private RadioButton decryptRadio;
@@ -38,10 +40,14 @@ public class PopUpController implements Initializable{
 	@FXML Button popUpBrowse;
 	
 	private Model model;
+	private MainWindow mainWindow;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		cancel.setOnAction(e -> PopUp.closeWindow());
+		mainWindow = MainWindow.getMainWindow();
+		model = mainWindow.getModel();
+
+		cancel.setOnAction(e -> mainWindow.closeOutputScene());
 		this.encryptRadio.setSelected(true);
 		this.decryptRadio.setSelected(false);
 		this.passwordField.textProperty().addListener((obs,oldText,newText)-> {
@@ -73,11 +79,45 @@ public class PopUpController implements Initializable{
 		this.unhiddenPasswordField.setOnKeyPressed(new enterHandler());
 		
 	}
-	
-	
-	public void initializeData(Model model) {
-		this.model = model;
+
+
+
+	public void convert()  throws CryptoException {
+		if(model.isEncryptedMode()) {
+			this.encrypt();
+		}
+		else {
+			this.decrypt();
+		}
 	}
+
+	private void encrypt() throws CryptoException {
+		File encryptedFile = new File(model.getOutputFilePath() + File.separator + Constants.ENCRYPTED.getValue() + model.getInputFile().getName());
+		if(encryptedFile.exists()) {
+			throw new CryptoException(Constants.FILE_EXIST_ERROR_MSG.getValue());
+		}
+		try {
+			CryptoUtils.encrypt(model.getKey(), model.getInputFile(), encryptedFile);
+		}catch(OutOfMemoryError e) {
+			throw new CryptoException(Constants.FILE_TOO_BIG.getValue());
+		}
+
+
+	}
+
+	private void decrypt() throws CryptoException {
+		File decryptedFile = new File(model.getOutputFilePath() + File.separator + Constants.DECRYPTED.getValue() + model.getInputFile().getName());
+		if(decryptedFile.exists()) {
+			throw new CryptoException(Constants.FILE_EXIST_ERROR_MSG.getValue());
+		}
+		try {
+			CryptoUtils.decrypt(model.getKey(), model.getInputFile(), decryptedFile);
+		}catch(OutOfMemoryError e) {
+			throw new CryptoException(Constants.FILE_TOO_BIG.getValue());
+		}
+	}
+
+
 	
 	@FXML 
 	public void confirmedSelected(ActionEvent e) {
@@ -95,8 +135,8 @@ public class PopUpController implements Initializable{
 			this.model.setKey(this.passwordField.getText());
 			this.model.setOutPutFile(this.popUpBrowsePath.getText());
 			this.model.setEncrypted(this.encryptRadio.isSelected());
-			PopUp.closeWindow();
-			model.convertButtonSetConvertingStatus(true);
+			mainWindow.closeOutputScene();
+			mainWindow.convertButtonSetConvertingStatus(true);
 			Thread convertThread = new Thread(new convertThread());
 			convertThread.start();
 			
@@ -104,12 +144,12 @@ public class PopUpController implements Initializable{
 	}
 	
 	@FXML public void cancelClicked(ActionEvent e) {
-		PopUp.closeWindow();
+		mainWindow.closeOutputScene();
 	}
 	
 	@FXML public void popUpBrowseClicked(ActionEvent e){
 		DirectoryChooser chooser = new DirectoryChooser();
-		chooser.setTitle("Save Location");
+		chooser.setTitle(Constants.SAVE_LOCATION.getValue());
 		// null pointer error here, don't care cuz code still works 
 		try {
 		this.popUpBrowsePath.setText(chooser.showDialog(null).getAbsolutePath());
@@ -120,27 +160,24 @@ public class PopUpController implements Initializable{
 	
 	
 	private class enterHandler implements EventHandler<KeyEvent>{
-
 		@Override
 		public void handle(KeyEvent e) {
 			if (e.getCode().equals(KeyCode.ENTER)) {
-				PopUpController.this.confirmedSelected(new ActionEvent());
+				OutputSceneController.this.confirmedSelected(new ActionEvent());
 			}
 
 		}
 	}
 	
 	private class convertThread implements Runnable{
-
 		@Override
 		public void run(){
 			try {
-				PopUpController.this.model.convert();
-				Platform.runLater(() -> model.convertButtonSetConvertingStatus(false));
-				Platform.runLater(() -> AlertPopUp.display("Success!"));
-				
+				OutputSceneController.this.convert();
+				Platform.runLater(() -> mainWindow.convertButtonSetConvertingStatus(false));
+				Platform.runLater(() -> AlertPopUp.display(Constants.SUCCESS.getValue()));
 			} catch (CryptoException e) {
-				Platform.runLater(() -> model.convertButtonSetConvertingStatus(false));
+				Platform.runLater(() -> mainWindow.convertButtonSetConvertingStatus(false));
 				Platform.runLater(() -> AlertPopUp.display(e.getMessage()));
 			}
 			

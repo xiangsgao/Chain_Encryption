@@ -21,6 +21,8 @@ public enum Constants {
     NO_INPUT_ERROR_MSG("User did not enter input"),
     EMPTY_KEY_ERROR_MSG("key can not be empty\nEnter keys with length of 8 or more if you are serious about security"),
     NULL_ERROR_MSG("Null on pop up browse path"),
+    SAVE_LOCATION("Save Location"),
+    SUCCESS("Success!"),
     CONVERT("Convert");
 
 

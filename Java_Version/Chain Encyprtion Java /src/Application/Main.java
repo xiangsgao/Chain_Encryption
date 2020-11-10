@@ -13,7 +13,8 @@ public class Main extends Application{
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle(Constants.TITLE.getValue());
-		new MainWindow(stage);
+		MainWindow mainWindow = MainWindow.newInstance(stage);
+		mainWindow.displayInputScene();
 	}
 
 

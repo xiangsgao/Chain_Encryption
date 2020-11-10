@@ -1,5 +1,7 @@
 package Application.UI;
 import Application.Constants;
+import Application.Controllers.InputSceneController;
+import Application.Controllers.OutputSceneController;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -7,18 +9,31 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import Application.Model.Model;
-import Application.Controllers.PopUpController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+
+
 public class MainWindow {
 
+	private static MainWindow mainWindow;
+
 	private Model model;
-	private Stage stage;
-	private Parent root;
-	
-	public MainWindow(Stage stage) throws Exception{
+	private Stage mainWindowStage;
+	InputSceneController inputSceneController;
+	OutputSceneController outputSceneController;
+
+
+	public static MainWindow newInstance(Stage stage){
+		if(mainWindow == null) mainWindow = new MainWindow(stage);
+		return mainWindow;
+	}
+
+	public static MainWindow getMainWindow() {
+		return mainWindow;
+	}
+
+	private MainWindow(Stage stage){
 		/* This is how you do it without forms
 		root = new StackPane();
 		Button bt = new Button("Browse");
@@ -27,30 +42,44 @@ public class MainWindow {
 		root.getChildren().add(bt);
 		this.stage.setScene(scene);
 		*/
-		FXMLLoader loader = new FXMLLoader(this.getClass().getResource(Constants.MAIN_SCREEN_FORM.getValue()));
-		root = loader.load();
-		Scene scene = new Scene(root);
-		this.stage = stage;
-		this.stage.setScene(scene);
-		this.stage.show();
-		// JavaFX version of getViewById, gotta do this after the scene has been render or it returns null. Use @FXML if all fails
-		Button convertButton = (Button)loader.getNamespace().get(Constants.CONVERT_BUTTON.getValue());
-		this.model = new Model(this, loader.getController(), convertButton);
+		this.mainWindowStage = stage;
+		this.model = new Model(this);
 	}
-		
-	
-		public void displayPopUp() {
-			FXMLLoader loader = new FXMLLoader(this.getClass().getResource(Constants.POP_UP_FORM.getValue()));
-			try {
-				Parent root = loader.load();
-				PopUpController controller = loader.getController();
-				controller.initializeData(model);
-				PopUp.dispaly(root);
-			} catch (IOException e) {
-				Logger.getLogger(PopUp.class.getName()).log(Level.SEVERE, null, e);
-			}
-			
+
+
+	public Model getModel() {
+		return model;
+	}
+
+	public void displayOutputScene() {
+		FXMLLoader loader = new FXMLLoader(this.getClass().getResource(Constants.POP_UP_FORM.getValue()));
+		try {
+			Parent root = loader.load();
+			outputSceneController = loader.getController();
+			OutputSceneWindow.display(root);
+		} catch (IOException e) {
+			Logger.getLogger(String.format("Error: %s", OutputSceneWindow.class.getName())).log(Level.SEVERE, null, e);
 		}
-	
-	
+	}
+
+	public void closeOutputScene(){
+		OutputSceneWindow.closeWindow();
+	}
+
+	public void displayInputScene(){
+		FXMLLoader loader = new FXMLLoader(this.getClass().getResource(Constants.MAIN_SCREEN_FORM.getValue()));
+		try{
+			Parent root = loader.load();
+			inputSceneController = loader.getController();
+			Scene scene = new Scene(root);
+			this.mainWindowStage.setScene(scene);
+			this.mainWindowStage.show();
+		}catch (IOException e){
+			Logger.getLogger(String.format("Error: can't display input scene")).log(Level.SEVERE, null, e);
+		}
+	}
+
+	public void convertButtonSetConvertingStatus(Boolean isConverting) {
+		inputSceneController.convertButtonSetConvertingStatus(isConverting);
+	}
 }
