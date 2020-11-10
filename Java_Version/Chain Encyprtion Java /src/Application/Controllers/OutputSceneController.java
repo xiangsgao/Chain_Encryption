@@ -139,7 +139,6 @@ public class OutputSceneController implements Initializable{
 			mainWindow.convertButtonSetConvertingStatus(true);
 			Thread convertThread = new Thread(new convertThread());
 			convertThread.start();
-			
 		}
 	}
 	

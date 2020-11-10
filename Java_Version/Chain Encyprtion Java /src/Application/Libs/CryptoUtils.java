@@ -1,6 +1,8 @@
 package Application.Libs;
 
 
+import sun.awt.X11.XSystemTrayPeer;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -27,10 +29,10 @@ import javax.crypto.spec.SecretKeySpec;
  * Only the generateCrytoKey method is my own. I had modified this class for my needs
  * All the original codes belong to the original author
  */
-public class CryptoUtils {
+public class  CryptoUtils {
 	//private static final String ALGORITHM = "AES";
     private static final String TRANSFORMATION = "AES";
- 
+    private static final int MAX_LEN = 1024;
     public static void encrypt(String key, File inputFile, File outputFile)
             throws CryptoException {
         doCrypto(Cipher.ENCRYPT_MODE, key, inputFile, outputFile);
@@ -51,13 +53,15 @@ public class CryptoUtils {
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(cipherMode, secretKey);
             FileInputStream inputStream = new FileInputStream(inputFile);
-            byte[] inputBytes = new byte[(int) inputFile.length()];
-            inputStream.read(inputBytes);
-             
-            byte[] outputBytes = cipher.doFinal(inputBytes);
-             
+
+            byte[] inputBytes = new byte[MAX_LEN];
             FileOutputStream outputStream = new FileOutputStream(outputFile);
-            outputStream.write(outputBytes);
+
+            for(int readBytes = inputStream.read(inputBytes); readBytes>-1; readBytes=inputStream.read(inputBytes)) {
+                outputStream.write(cipher.update(inputBytes,0, readBytes));
+            }
+
+            outputStream.write(cipher.doFinal());
              
             inputStream.close();
             outputStream.close();
@@ -65,6 +69,7 @@ public class CryptoUtils {
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
                 | InvalidKeyException | BadPaddingException
                 | IllegalBlockSizeException | IOException ex) {
+            System.out.println(ex.getMessage());
             throw new CryptoException("Oops, your key seems wrong or this file is not encrypted");
         }
     }
