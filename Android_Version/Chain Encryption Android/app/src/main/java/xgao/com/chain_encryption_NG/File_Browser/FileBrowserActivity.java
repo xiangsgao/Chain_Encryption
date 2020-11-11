@@ -1,4 +1,4 @@
-package xgao.com.text_crypt_android.File_Browser;
+package xgao.com.chain_encryption_NG.File_Browser;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -11,9 +11,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,9 +29,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import xgao.com.text_crypt_android.MainActivity;
-import xgao.com.text_crypt_android.R;
-import xgao.com.text_crypt_android.logic.intentCodes;
+import xgao.com.chain_encryption_NG.R;
+import xgao.com.chain_encryption_NG.logic.IntentCodes;
 
 /**
  Copyright (C) 2011 by Brad Greco <brad@bgreco.net>
@@ -71,7 +70,7 @@ public class FileBrowserActivity extends ListActivity {
     private File dir;
     private boolean showHidden = false;
     private boolean onlyDirs = true;
-    private int operationMode = intentCodes.REQUEST_FILE_BROWSER;
+    private int operationMode = IntentCodes.REQUEST_FILE_BROWSER;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +84,7 @@ public class FileBrowserActivity extends ListActivity {
         Bundle extras = getIntent().getExtras();
         dir = Environment.getExternalStorageDirectory();
         if (extras != null) {
-            this.operationMode = extras.getInt(BROWSER_MODE, intentCodes.REQUEST_FILE_BROWSER);
+            this.operationMode = extras.getInt(BROWSER_MODE, IntentCodes.REQUEST_FILE_BROWSER);
             String preferredStartDir = extras.getString(START_DIR);
             showHidden = extras.getBoolean(SHOW_HIDDEN, false);
             onlyDirs = extras.getBoolean(ONLY_DIRS, true);
@@ -109,11 +108,11 @@ public class FileBrowserActivity extends ListActivity {
         setTitle(dir.getAbsolutePath());
         Button fileBrowserButton = (Button) findViewById(R.id.btnChoose);
         String name = dir.getName();
-        if(this.operationMode == intentCodes.REQUEST_FILE){
+        if(this.operationMode == IntentCodes.REQUEST_FILE){
             fileBrowserButton.setVisibility(View.GONE);
         }
 
-       else if(this.operationMode == intentCodes.REQUEST_DIRECTORY){
+       else if(this.operationMode == IntentCodes.REQUEST_DIRECTORY){
             fileBrowserButton.setText("Select " + "'/" + name + "'");
             fileBrowserButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -122,7 +121,7 @@ public class FileBrowserActivity extends ListActivity {
             });
         }
 
-        else if (this.operationMode == intentCodes.REQUEST_FILE_BROWSER){
+        else if (this.operationMode == IntentCodes.REQUEST_FILE_BROWSER){
             fileBrowserButton.setText("Close Browser");
             fileBrowserButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -147,7 +146,7 @@ public class FileBrowserActivity extends ListActivity {
 
         final ArrayList<File> files = filter(dir.listFiles(), onlyDirs, showHidden);
         ArrayList<String> names = names(files);
-         setListAdapter(new fileExploererAdaptor(this, files, names));
+         setListAdapter(new FileExploererAdaptor(this, files, names));
         //  setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item,names));
         lv.setOnItemClickListener(new customHandler(files));
 
@@ -178,12 +177,12 @@ public class FileBrowserActivity extends ListActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if((requestCode == intentCodes.REQUEST_DIRECTORY || requestCode == intentCodes.REQUEST_FILE) && resultCode == RESULT_OK) {
+        if((requestCode == IntentCodes.REQUEST_DIRECTORY || requestCode == IntentCodes.REQUEST_FILE) && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             String path = (String) extras.get(FileBrowserActivity.RETURN_PATH);
             returnPath(path);
         }
-        if(requestCode == intentCodes.REQUEST_FILE_BROWSER && resultCode == RESULT_OK){
+        if(requestCode == IntentCodes.REQUEST_FILE_BROWSER && resultCode == RESULT_OK){
             this.simplyClose();
         }
     }
@@ -272,7 +271,7 @@ public class FileBrowserActivity extends ListActivity {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
-                        ((fileExploererAdaptor) FileBrowserActivity.this.getListAdapter()).delete(position, FileBrowserActivity.this);
+                        ((FileExploererAdaptor) FileBrowserActivity.this.getListAdapter()).delete(position, FileBrowserActivity.this);
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
@@ -301,13 +300,13 @@ public class FileBrowserActivity extends ListActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             // This returns the file path
-            if(!files.get(position).isDirectory() && FileBrowserActivity.this.operationMode == intentCodes.REQUEST_FILE) {
+            if(!files.get(position).isDirectory() && FileBrowserActivity.this.operationMode == IntentCodes.REQUEST_FILE) {
                 returnPath(files.get(position).getAbsolutePath());
                 return;
             }
-            else if (!files.get(position).isDirectory() && FileBrowserActivity.this.operationMode == intentCodes.REQUEST_FILE_BROWSER){
+            else if (!files.get(position).isDirectory() && FileBrowserActivity.this.operationMode == IntentCodes.REQUEST_FILE_BROWSER){
                 try {
-                    fileBrowserHelper.openFile(FileBrowserActivity.this, files.get(position));
+                    FileBrowserHelper.openFile(FileBrowserActivity.this, files.get(position));
                 } catch (IOException e) {
                    FileBrowserActivity.this.displayAlert("Can't open this file it seems");
                 }

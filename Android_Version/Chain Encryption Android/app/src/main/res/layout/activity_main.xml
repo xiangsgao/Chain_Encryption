@@ -7,7 +7,7 @@
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="xgao.com.text_crypt_android.MainActivity">
+    tools:context="xgao.com.chain_encryption_NG.MainActivity">
 
     <TextView
         android:id="@+id/instructionLabel1"

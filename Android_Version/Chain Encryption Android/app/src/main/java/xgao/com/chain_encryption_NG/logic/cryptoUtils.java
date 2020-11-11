@@ -1,4 +1,4 @@
-package xgao.com.text_crypt_android.logic;
+package xgao.com.chain_encryption_NG.logic;
 
 
 import java.io.File;
@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.Permission;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
@@ -31,52 +30,53 @@ import javax.crypto.spec.SecretKeySpec;
 public class cryptoUtils {
     private static final String TRANSFORMATION = "AES";
     private static final String ALGORITHM = "AES";
+    private static final int MAX_LEN = 1024;
  
     public static void encrypt(String key, File inputFile, File outputFile)
-            throws cryptoException {
+            throws CryptoException {
         doCrypto(Cipher.ENCRYPT_MODE, key, inputFile, outputFile);
     }
  
     public static void decrypt(String key, File inputFile, File outputFile)
-            throws cryptoException {
+            throws CryptoException {
         doCrypto(Cipher.DECRYPT_MODE,key, inputFile, outputFile);
     }
- 
+
     private static void doCrypto(int cipherMode, String key, File inputFile,
-            File outputFile) throws cryptoException {
-    	// This generates the key, helpful if user enters key not in 16, 32, 64, or 128 bytes
-            SecretKeySpec secretKey = convertKeyTo128bits(key);
+                                 File outputFile) throws CryptoException {
+        // This generates the key, helpful if user enters key not in 16, 32, 64, or 128 bytes
+        SecretKeySpec secretKey = convertKeyTo128bits(key);
         try{
             // This is the default and supports only 128 bits or 256 bits key length
             // Key secretKey = new SecretKeySpec(key.getBytes(), ALGORITHM);
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(cipherMode, secretKey);
             FileInputStream inputStream = new FileInputStream(inputFile);
-            byte[] inputBytes = new byte[(int) inputFile.length()];
-            inputStream.read(inputBytes);
-             
-            byte[] outputBytes = cipher.doFinal(inputBytes);
-             
+
+            byte[] inputBytes = new byte[MAX_LEN];
             FileOutputStream outputStream = new FileOutputStream(outputFile);
-            outputStream.write(outputBytes);
-             
+
+            for(int readBytes = inputStream.read(inputBytes); readBytes>-1; readBytes=inputStream.read(inputBytes)) {
+                outputStream.write(cipher.update(inputBytes,0, readBytes));
+            }
+
+            outputStream.write(cipher.doFinal());
+
             inputStream.close();
             outputStream.close();
-             
+
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
                 | InvalidKeyException | BadPaddingException
                 | IllegalBlockSizeException | IOException ex) {
-            if(ex.getMessage().contains("Permission")){
-                throw new cryptoException("Sorry but writing files to removable SD card is unsupported due to Android SDK limitation. (Actually I am just lazy and sick of rewriting and debugging my codes) Use third party file manager to move converted files from internal storage to external storage as an alternative.");
-            }
-            throw new cryptoException("Oops, is this file encrypted? If yes, is the key right?");
+            System.out.println(ex.getMessage());
+            throw new CryptoException("Oops, your key seems wrong or this file is not encrypted");
         }
     }
     
 
     // generating cryto key using salt. This allows user to enter unique keys of any length, none zero of course
     // This has bugs on Android java JRE so can't use or have to modified
-    private static SecretKey generateCrytoKey(String userKey) throws cryptoException{
+    private static SecretKey generateCrytoKey(String userKey) throws CryptoException{
         char[] charKey = {userKey.charAt(0)};
         byte[] salt = new String (charKey).getBytes();
         charKey = userKey.toCharArray();
@@ -88,18 +88,18 @@ public class cryptoUtils {
             SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
             return secret;
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-          throw new cryptoException("Key is wrong or file is not encrypted");
+          throw new CryptoException("Key is wrong or file is not encrypted");
         }
 
     }
         // custom made for android
-    private static SecretKeySpec convertKeyTo128bits(String userKey) throws cryptoException{
+    private static SecretKeySpec convertKeyTo128bits(String userKey) throws CryptoException{
         byte[] key = userKey.getBytes();
         MessageDigest sha = null;
         try {
             sha = MessageDigest.getInstance("SHA-1");
         } catch (NoSuchAlgorithmException e) {
-            throw new cryptoException("key conversion error");
+            throw new CryptoException("key conversion error");
         }
         key = sha.digest(key);
         key = Arrays.copyOf(key, 16); // use only first 128 bit

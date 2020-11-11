@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Chain Encyprtion Java :jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Chain_Encyprtion_Java__jar</output-path>
+    <root id="archive" name="Chain Encyprtion Java .jar">
+      <element id="module-output" name="Chain Encyprtion Java " />
+    </root>
+  </artifact>
+</component>

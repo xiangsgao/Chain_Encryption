@@ -1,20 +1,19 @@
-package xgao.com.text_crypt_android.logic;
+package xgao.com.chain_encryption_NG.logic;
 
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import java.io.File;
 
-import xgao.com.text_crypt_android.MainActivity;
+import xgao.com.chain_encryption_NG.MainActivity;
 
 
 /**
  * Created by xgao on 10/21/17.
  */
 
-public class model  implements Parcelable{
+public class Model implements Parcelable{
 
     public static final String ALL_GOOD = "Everything is good";
 
@@ -25,15 +24,15 @@ public class model  implements Parcelable{
     private String key = "";
     private String encryptionMode;
 
-    public model() {
+    public Model() {
     }
 
-    public void convert() throws cryptoException{
+    public void convert() throws CryptoException {
         if (encryptionMode.equals(MainActivity.ENCRYPT_MODE)) {
             try {
                 this.encrypt();
             }catch (OutOfMemoryError e){
-                throw new cryptoException("File is too big, app can not fit the file into your ram but don't worry, I will fix it in a patch.");
+                throw new CryptoException("File is too big, app can not fit the file into your ram but don't worry, I will fix it in a patch.");
             }
         }
 
@@ -41,7 +40,7 @@ public class model  implements Parcelable{
             try {
                 this.decrypt();
             }catch (OutOfMemoryError e){
-                throw new cryptoException("File is too big, app can not fit the file into your ram but don't worry, I will fix it in a patch.");
+                throw new CryptoException("File is too big!");
             }
         }
     }
@@ -84,10 +83,10 @@ public class model  implements Parcelable{
         this.uriInput = uriInput;
     }
 
-    private void decrypt() throws cryptoException{
+    private void decrypt() throws CryptoException {
         File decryptedFile = new File(this.outputFile.getPath() +"/" +"decrypted_"+this.inputFile.getName());
         if(decryptedFile.exists()) {
-            throw new cryptoException("File with same name already exists, delete the old one first");
+            throw new CryptoException("File with same name already exists, delete the old one first");
         }
         if(uriInput){
             uriInputFileName.substring(10);
@@ -97,10 +96,10 @@ public class model  implements Parcelable{
         cryptoUtils.decrypt(this.key, this.inputFile, decryptedFile);
     }
 
-    private void encrypt() throws  cryptoException{
+    private void encrypt() throws CryptoException {
         File encryptedFile = new File(this.outputFile.getPath() + "/" + "encrypted_" + this.inputFile.getName());
         if(encryptedFile.exists()) {
-                throw new cryptoException("File with same name already exists, delete the old one first");
+                throw new CryptoException("File with same name already exists, delete the old one first");
         }
         if(uriInput){
            String path = this.outputFile.getPath() + "/" + "encrypted_" + uriInputFileName;
@@ -128,7 +127,7 @@ public class model  implements Parcelable{
         dest.writeString(this.encryptionMode);
     }
 
-    protected model(Parcel in) {
+    protected Model(Parcel in) {
         this.inputFile = (File) in.readSerializable();
         this.uriInput = in.readByte() != 0;
         this.uriInputFileName = in.readString();
@@ -137,15 +136,15 @@ public class model  implements Parcelable{
         this.encryptionMode = in.readString();
     }
 
-    public static final Creator<model> CREATOR = new Creator<model>() {
+    public static final Creator<Model> CREATOR = new Creator<Model>() {
         @Override
-        public model createFromParcel(Parcel source) {
-            return new model(source);
+        public Model createFromParcel(Parcel source) {
+            return new Model(source);
         }
 
         @Override
-        public model[] newArray(int size) {
-            return new model[size];
+        public Model[] newArray(int size) {
+            return new Model[size];
         }
     };
 }

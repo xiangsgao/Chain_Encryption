@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="xgao.com.text_crypt_android">
+    package="xgao.com.chain_encryption_NG">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="xgao.com.chain_encryption_NG.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,12 +20,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".File_Browser.FileBrowserActivity"
+            android:name="xgao.com.chain_encryption_NG.File_Browser.FileBrowserActivity"
             android:label="@string/title_activity_file_browser"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".AboutActivity"></activity>
-        <service android:name=".MainActivity$intentService"
-            android:stopWithTask="false"/>;
+        <activity android:name="xgao.com.chain_encryption_NG.AboutActivity"></activity>
+        <service android:name="xgao.com.chain_encryption_NG.MainActivity$intentService"
+            android:stopWithTask="false"/>
     </application>
 
 </manifest>

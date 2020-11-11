@@ -1,4 +1,4 @@
-package xgao.com.text_crypt_android;
+package xgao.com.chain_encryption_NG;
 
 
 import android.Manifest;
@@ -20,11 +20,11 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.provider.DocumentsContract;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.Menu;
@@ -39,11 +39,11 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 
-import xgao.com.text_crypt_android.File_Browser.FileBrowserActivity;
-import xgao.com.text_crypt_android.File_Browser.fileBrowserHelper;
-import xgao.com.text_crypt_android.logic.cryptoException;
-import xgao.com.text_crypt_android.logic.intentCodes;
-import xgao.com.text_crypt_android.logic.model;
+import xgao.com.chain_encryption_NG.File_Browser.FileBrowserActivity;
+import xgao.com.chain_encryption_NG.File_Browser.FileBrowserHelper;
+import xgao.com.chain_encryption_NG.logic.CryptoException;
+import xgao.com.chain_encryption_NG.logic.IntentCodes;
+import xgao.com.chain_encryption_NG.logic.Model;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String ENCRYPT_MODE = "ENCRYPT";
     public static final String DECRYPT_MODE = "DECRYPT";
 
-    private model model;
+    private Model model;
     private EditText inputPath;
     private EditText outputPath;
     private EditText password;
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         this.inputPath.setFocusable(false);
         outputPath = this.findViewById(R.id.outPutPath);
         password =  this.findViewById(R.id.passWordInput);
-        model = new model();
+        model = new Model();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         restorePreferences();
         // Gotta do this here too because of stupid bugs
@@ -182,12 +182,12 @@ public class MainActivity extends AppCompatActivity {
     if(this.useBuiltInFileExplorer){
         Intent intent = new Intent(MainActivity.this, FileBrowserActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putInt(FileBrowserActivity.BROWSER_MODE, intentCodes.REQUEST_FILE);
+        bundle.putInt(FileBrowserActivity.BROWSER_MODE, IntentCodes.REQUEST_FILE);
         bundle.putString(FileBrowserActivity.START_DIR,"/storage/");
         bundle.putBoolean(FileBrowserActivity.SHOW_HIDDEN, true);
         bundle.putBoolean(FileBrowserActivity.ONLY_DIRS, false);
         intent.putExtras(bundle);
-        startActivityForResult(intent, intentCodes.REQUEST_FILE);
+        startActivityForResult(intent, IntentCodes.REQUEST_FILE);
     }else {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         // use intent.setType("image/*"); to choose only image file
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         // Do this if you need to be able to open the returned URI as a stream
         // intent.addCategory(Intent.CATEGORY_OPENABLE);
         if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
-            startActivityForResult(Intent.createChooser(intent, "Choose any file manager to pick a file to convert"), intentCodes.REQUEST_FILE);
+            startActivityForResult(Intent.createChooser(intent, "Choose any file manager to pick a file to convert"), IntentCodes.REQUEST_FILE);
         } else {
             Toast.makeText(this.getApplicationContext(), "No file browser found", Toast.LENGTH_SHORT).show();
         }
@@ -210,8 +210,8 @@ public class MainActivity extends AppCompatActivity {
         if(this.useBuiltInFileExplorer){
             Intent intent = new Intent(MainActivity.this,FileBrowserActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putInt(FileBrowserActivity.BROWSER_MODE, intentCodes.REQUEST_FILE_BROWSER);
-            if(fileBrowserHelper.checkPathValid(this.outputPath.getText().toString())) {
+            bundle.putInt(FileBrowserActivity.BROWSER_MODE, IntentCodes.REQUEST_FILE_BROWSER);
+            if(FileBrowserHelper.checkPathValid(this.outputPath.getText().toString())) {
                 bundle.putString(FileBrowserActivity.START_DIR, this.outputPath.getText().toString());
             }
             else{
@@ -220,10 +220,10 @@ public class MainActivity extends AppCompatActivity {
             bundle.putBoolean(FileBrowserActivity.SHOW_HIDDEN, true);
             bundle.putBoolean(FileBrowserActivity.ONLY_DIRS, false);
             intent.putExtras(bundle);
-            startActivityForResult(intent, intentCodes.REQUEST_FILE_BROWSER);
+            startActivityForResult(intent, IntentCodes.REQUEST_FILE_BROWSER);
         }else {
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            if(fileBrowserHelper.checkPathValid(this.outputPath.getText().toString())){
+            if(FileBrowserHelper.checkPathValid(this.outputPath.getText().toString())){
                 intent.setDataAndType(Uri.parse(this.outputPath.getText().toString()), "*/*");
             }else {
                 intent.setDataAndType(Uri.parse(Environment.getExternalStorageDirectory().getPath()), "*/*");
@@ -243,14 +243,14 @@ public class MainActivity extends AppCompatActivity {
 
 
             switch (requestCode) {
-                case intentCodes.REQUEST_FILE:
+                case IntentCodes.REQUEST_FILE:
                     if (result == null) {
                         break;
                     }
                     if(this.useBuiltInFileExplorer){
                         this.uriInput = false;
                         this.inputPath.setText(result.getStringExtra(FileBrowserActivity.RETURN_PATH));
-                        if(fileBrowserHelper.checkPathValid(uriFilePath)){
+                        if(FileBrowserHelper.checkPathValid(uriFilePath)){
                             new File(uriFilePath).delete();
                         }
                     }else {
@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
 
-                case intentCodes.REQUEST_DIRECTORY:
+                case IntentCodes.REQUEST_DIRECTORY:
                     if (result == null) {
                         break;
                     }
@@ -294,17 +294,17 @@ public class MainActivity extends AppCompatActivity {
         if(this.useBuiltInFileExplorer){
             Intent intent = new Intent(MainActivity.this, FileBrowserActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putInt(FileBrowserActivity.BROWSER_MODE, intentCodes.REQUEST_DIRECTORY);
+            bundle.putInt(FileBrowserActivity.BROWSER_MODE, IntentCodes.REQUEST_DIRECTORY);
             bundle.putString(FileBrowserActivity.START_DIR,"/storage");
             bundle.putBoolean(FileBrowserActivity.SHOW_HIDDEN, true);
             bundle.putBoolean(FileBrowserActivity.ONLY_DIRS, true);
             intent.putExtras(bundle);
-            startActivityForResult(intent, intentCodes.REQUEST_DIRECTORY);
+            startActivityForResult(intent, IntentCodes.REQUEST_DIRECTORY);
         }else {
             Intent intent = new Intent();
             intent.setType(DocumentsContract.Document.MIME_TYPE_DIR);
            try{
-                startActivityForResult(Intent.createChooser(intent, "Choose ES File Explorer to pick directory, download it from playstore if you don't have it installed already"), intentCodes.REQUEST_DIRECTORY);
+                startActivityForResult(Intent.createChooser(intent, "Choose ES File Explorer to pick directory, download it from playstore if you don't have it installed already"), IntentCodes.REQUEST_DIRECTORY);
             } catch (ActivityNotFoundException e){
                 Toast.makeText(this.getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -392,7 +392,7 @@ public class MainActivity extends AppCompatActivity {
                 String uriString = reply.getString(intentService.convertUri);
                 Uri uri = Uri.parse(uriString);
                 MainActivity.this.inputPath.setEnabled(true);
-                MainActivity.this.inputPath.setText(fileBrowserHelper.getFileName(uri, MainActivity.this));
+                MainActivity.this.inputPath.setText(FileBrowserHelper.getFileName(uri, MainActivity.this));
                 MainActivity.this.uriInput = true;
                 MainActivity.this.findViewById(R.id.convertButton).setEnabled(true);
                 ((Button) MainActivity.this.findViewById(R.id.convertButton)).setText("Convert");
@@ -444,7 +444,7 @@ public class MainActivity extends AppCompatActivity {
                 Message msg = Message.obtain();
                 msg.setData(bundle); //put the data here
                 try {
-                    fileBrowserHelper.AndroidUriToTempFile(uri, this);
+                    FileBrowserHelper.AndroidUriToTempFile(uri, this);
                     messenger.send(msg);
                 } catch (IOException | RemoteException e) {
                     Toast.makeText(this, "Can't parse the input file" + "\n" + e.getMessage(), Toast.LENGTH_LONG);
@@ -456,17 +456,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+        // actual conversion done here
         private static void handleConvert(Intent intent, Context context) {
             Bundle bundle = intent.getExtras();
             Messenger messenger = (Messenger) bundle.get("messenger");
             Message msg = Message.obtain();
-            xgao.com.text_crypt_android.logic.model model = intent.getParcelableExtra("model");
+            xgao.com.chain_encryption_NG.logic.Model model = intent.getParcelableExtra("model");
             try {
                 model.convert();
                 bundle.putBoolean("success", true);
                 msg.setData(bundle);
                 messenger.send(msg);
-            } catch (cryptoException | RemoteException e) {
+            } catch (CryptoException | RemoteException e) {
                 bundle.putBoolean("success", false);
                 bundle.putString("error", e.getMessage());
                 msg.setData(bundle);

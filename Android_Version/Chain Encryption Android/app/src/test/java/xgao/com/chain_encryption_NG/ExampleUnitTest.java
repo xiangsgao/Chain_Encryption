@@ -1,4 +1,4 @@
-package xgao.com.text_crypt_android;
+package xgao.com.chain_encryption_NG;
 
 import org.junit.Test;
 

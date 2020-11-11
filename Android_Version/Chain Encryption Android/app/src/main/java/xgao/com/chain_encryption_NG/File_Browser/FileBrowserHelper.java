@@ -1,4 +1,4 @@
-package xgao.com.text_crypt_android.File_Browser;
+package xgao.com.chain_encryption_NG.File_Browser;
 
 
 import android.content.ActivityNotFoundException;
@@ -19,7 +19,7 @@ import java.io.OutputStream;
 import java.net.URLConnection;
 
 
-public class fileBrowserHelper {
+public class FileBrowserHelper {
 
 
     public static String getFileName(Uri uri, Context context) {

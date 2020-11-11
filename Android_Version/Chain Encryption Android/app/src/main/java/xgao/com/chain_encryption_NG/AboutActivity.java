@@ -1,8 +1,8 @@
-package xgao.com.text_crypt_android;
+package xgao.com.chain_encryption_NG;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 

@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Chain Encryption Android.iml" filepath="$PROJECT_DIR$/Chain Encryption Android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Chain Encryption Android-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Chain Encryption Android-app.iml" group="Chain Encryption Android/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Chain_Encryption_Android.iml" filepath="$PROJECT_DIR$/.idea/modules/Chain_Encryption_Android.iml" group="Chain_Encryption_Android" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

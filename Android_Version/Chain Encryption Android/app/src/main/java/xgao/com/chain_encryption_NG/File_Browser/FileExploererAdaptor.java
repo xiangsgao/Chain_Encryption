@@ -1,10 +1,10 @@
-package xgao.com.text_crypt_android.File_Browser;
+package xgao.com.chain_encryption_NG.File_Browser;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,19 +19,19 @@ import java.util.ArrayList;
 import java.io.File;
 
 
-import xgao.com.text_crypt_android.R;
+import xgao.com.chain_encryption_NG.R;
 
 
 /**
  * Created by xgao on 11/1/17.
  */
 
-public class fileExploererAdaptor extends ArrayAdapter<String> {
+public class FileExploererAdaptor extends ArrayAdapter<String> {
 
     private LayoutInflater mInflator;
     private ArrayList<File> file;
     RecyclerView.ViewHolder holder = null;
-    public fileExploererAdaptor(@NonNull Context context, @NonNull ArrayList<File> file, @NonNull ArrayList<String> objects) {
+    public FileExploererAdaptor(@NonNull Context context, @NonNull ArrayList<File> file, @NonNull ArrayList<String> objects) {
         super(context, 0, objects);
         mInflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.file = file;
