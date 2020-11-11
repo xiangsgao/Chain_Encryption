@@ -4,7 +4,7 @@ The purpose of this app is to encrypt your file into total gibberish, which is u
 
 # Java version instruction
 
-Java version is finished. Download the chain_encryption.jar in java version folder and make it executable to run the application. Make sure java runtime enviorment from the oracle website is installed beforehand. I am not packaging the jar into a windows .exe executable because it defeats the whole purpose of cross platform language like java. You will need to know how to run a jar on your own.
+Java version is finished. Download the chain_encryption.jar in java version folder and make it executable to run the application. Alternatively, download it from my github releases. Make sure java runtime enviorment from the oracle website is installed beforehand. I am not packaging the jar into a windows .exe executable because it defeats the whole purpose of cross platform language like java. You will need to know how to run a jar on your own.
 
 Latest jar is thoughly tested on both windows and linux. Mac OS is not yet tested.
 
